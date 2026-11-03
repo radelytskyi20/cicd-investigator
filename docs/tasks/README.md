@@ -12,7 +12,7 @@ T01-00 adapts the English v1.2 implementation package into this repository. Task
 
 Subsequent tasks read AGENTS.md, docs/decisions.md, docs/requirements.md and docs/tasks/Txx-xx.md. The task index tracks status and dependencies. Detailed commands go into docs/development.md only once verified; task completion notes record execution and outcome.
 
-The target repository path is supplied when T01-00 is assigned. Do not initialize Git in an arbitrary chat directory. New chat sessions must recover context from the repository. All repository-facing documentation and task reports are English; owner discussion can remain Russian.
+The target repository path is supplied when T01-00 is assigned. Do not initialize Git in an arbitrary chat directory. All repository-facing documentation and task reports are English; owner discussion can remain Russian.
 
 Example assignment: Implement T01-00 from this package. Prepare the repository instructions and documentation only. Follow the stack, scope and acceptance checks, provide the review result and commit hash, and do not start T01-01 until this task has been accepted and that task is assigned.
 
@@ -31,7 +31,7 @@ All stage gates below are Planned and unverified. Dependencies form the listed s
 
 G1: Codex-ready repository and verified environment; AppHost starts SQL, API, MCP and SPA; EF connectivity passes and the foundation is committed.
 
-- [T01-00 Prepare the repository for Codex](T01-00.md) | Ready for review | Depends on: none
+- [T01-00 Prepare the repository for Codex](T01-00.md) | Done | Depends on: none
 - [T01-01 Configure the development environment and pin versions](T01-01.md) | Planned | Depends on: [T01-00](T01-00.md)
 - [T01-02 Scaffold the solution and applications](T01-02.md) | Planned | Depends on: [T01-01](T01-01.md)
 - [T01-03 Orchestrate the local stack with Aspire](T01-03.md) | Planned | Depends on: [T01-02](T01-02.md)

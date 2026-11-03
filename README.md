@@ -4,7 +4,7 @@ A planned local learning project demonstrating evidence-based CI/CD investigatio
 
 ## Current state
 
-Only repository preparation is in scope for [T01-00](docs/tasks/T01-00.md). Application code, runtime pins and verified application commands do not exist yet. T01-01 requires owner acceptance of T01-00 and a separate assignment.
+Repository preparation in [T01-00](docs/tasks/T01-00.md) is complete and accepted by the owner. Application code, runtime pins and verified application commands do not exist yet. T01-01 remains Planned and requires a separate assignment.
 
 ## Planned stack and behavior
 

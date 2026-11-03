@@ -27,7 +27,3 @@ T01-02 will document verified restore/build/frontend checks. T01-03 will documen
 ## Secrets and runtime state
 
 Use local secrets and sanitized examples; never commit credentials or runtime session files. SDK/CLI persistent-state behavior remains unverified until T03-01. Ignore rules prevent accidental staging; they do not prove runtime cleanup or disable persistent memory.
-
-## Fresh-session recovery check
-
-Planned manual check: open this repository in a fresh Codex session, ask it to read instructions and report the stack, current task, dependency gate, check limitations and next-task restriction without editing files. It must identify T01-00 as awaiting review, require owner acceptance and assignment before T01-01, and distinguish planned application work from implemented repository preparation. This check has not been executed in a fresh session.
