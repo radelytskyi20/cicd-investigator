@@ -27,3 +27,7 @@ Keep run catalog, investigation, baseline comparison, hypotheses/evidence, open-
 ## Remaining small choices
 
 S01 as primary and S04 as the negative demonstration are proposed defaults, not earlier explicit owner choices. One mock repository is proposed; use only enough pipelines/configurations for meaningful examples. SDK version, runtime source and exact transport APIs are chosen from actual compatibility checks. These choices do not authorize expanding product scope.
+
+## Accepted foundation setup (November 4, 2026)
+
+The owner approved the five foundation slices linked from the task index. Preserve parent IDs T01-01 through T01-03. Use existing tools without unnecessary installation. SQL Server must publish configurable host port 14330 and must not bind host port 1433, which belongs to the owner's local SQL Server; keep container port 1433. The port mapping is planned, not yet implemented. Runtime and package baseline verification is recorded in development documentation.

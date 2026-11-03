@@ -4,11 +4,11 @@ A planned local learning project demonstrating evidence-based CI/CD investigatio
 
 ## Current state
 
-Repository preparation in [T01-00](docs/tasks/T01-00.md) is complete and accepted by the owner. Application code, runtime pins and verified application commands do not exist yet. T01-01 remains Planned and requires a separate assignment.
+Repository preparation in [T01-00](docs/tasks/T01-00.md) is complete and accepted by the owner. T01-01 is Ready for review: runtime/package baselines and environment checks are recorded in development documentation. Application code and verified application startup commands do not exist yet.
 
 ## Planned stack and behavior
 
-C#, ASP.NET Core, Aspire, SQL Server in Docker, EF Core, GitHub Copilot SDK for .NET with a compatible Copilot CLI, the official MCP C# SDK, React, TypeScript, Vite and plain CSS. Exact versions will be selected and verified in T01-01.
+C#, ASP.NET Core, Aspire, SQL Server in Docker, EF Core, GitHub Copilot SDK for .NET with a compatible Copilot CLI, the official MCP C# SDK, React, TypeScript, Vite and plain CSS. Selected versions and verification limits are recorded in docs/development.md.
 
 Select a completed failed mock run, investigate its sources and baseline, review evidence and hypotheses, and explicitly save a validated completed report. Follow-ups reuse one open SDK session. Closing the tab cancels analysis and discards transient conversation; saved completed reports remain. Persistent memory and automatic repairs are outside scope.
 
