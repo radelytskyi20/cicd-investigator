@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CiCdInvestigator.Api/CiCdInvestigator.Api.csproj" />
+    <Project Path="src/CiCdInvestigator.AppHost/CiCdInvestigator.AppHost.csproj" />
+    <Project Path="src/CiCdInvestigator.McpServer/CiCdInvestigator.McpServer.csproj" />
+  </Folder>
+</Solution>

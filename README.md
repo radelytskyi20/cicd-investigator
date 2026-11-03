@@ -4,7 +4,7 @@ A planned local learning project demonstrating evidence-based CI/CD investigatio
 
 ## Current state
 
-Repository preparation in [T01-00](docs/tasks/T01-00.md) is complete and accepted by the owner. T01-01 is Ready for review: runtime/package baselines and environment checks are recorded in development documentation. Application code and verified application startup commands do not exist yet.
+Repository preparation in [T01-00](docs/tasks/T01-00.md) is complete and accepted by the owner. T01-01 is accepted; T01-02 application shells are Ready for review. Backend/frontend builds and browser API connectivity pass. SQL orchestration and domain functionality are next.
 
 ## Planned stack and behavior
 

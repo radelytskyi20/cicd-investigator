@@ -65,3 +65,13 @@ SQL Server will publish configurable host port 14330, never host port 1433, whil
 ## Secrets and runtime state
 
 Keep credentials in local secrets; never commit runtime session files. Copilot authentication, actual SDK integration and service-file behavior remain unverified until T03-01. Ignore rules do not prove cleanup or disable persistent memory.
+
+## T01-02 verified application shell commands
+
+- Build backend: `dotnet build CiCdInvestigator.slnx --verbosity minimal`.
+- Build frontend from its directory: `node C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js run build` (quote the path containing spaces). Invoke npm-cli.js with selected Node explicitly: npm.cmd uses its adjacent system Node on this machine, even when PATH selects Node LTS.
+- API: `dotnet run --no-build --project src/CiCdInvestigator.Api --urls http://127.0.0.1:5100`.
+- MCP host: `dotnet run --no-build --project src/CiCdInvestigator.McpServer --urls http://127.0.0.1:5101`.
+- Frontend: `node node_modules/vite/bin/vite.js --host 127.0.0.1` from its directory.
+- Live /health checks returned Healthy on both hosts. Browser at http://127.0.0.1:5173 displayed API connected through the Vite proxy. No domain MCP endpoint exists yet.
+- The T01-01 temporary compatibility folder was deleted at the owner's request; its historical checks are retained above.

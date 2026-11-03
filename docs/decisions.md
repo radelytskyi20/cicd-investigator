@@ -31,3 +31,7 @@ S01 as primary and S04 as the negative demonstration are proposed defaults, not 
 ## Accepted foundation setup (November 4, 2026)
 
 The owner approved the five foundation slices linked from the task index. Preserve parent IDs T01-01 through T01-03. Use existing tools without unnecessary installation. SQL Server must publish configurable host port 14330 and must not bind host port 1433, which belongs to the owner's local SQL Server; keep container port 1433. The port mapping is planned, not yet implemented. Runtime and package baseline verification is recorded in development documentation.
+
+## Execution authorization
+
+On November 4, 2026 the owner approved sequential implementation of all current Stage 1-5 tasks without intermediate acceptance pauses. Keep focused task branches/commits, technical verification gates and truthful statuses. This does not authorize push, merge or marking unverified work Done. Stack branches on the preceding completed implementation without merging.

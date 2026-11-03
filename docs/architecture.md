@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Planned. No application structure or runtime has been implemented.
+Status: Application shells implemented in T01-02; orchestration, domain data and agent behavior remain planned.
 
 ## Planned components
 
@@ -17,3 +17,7 @@ One open connection owns active-session conversation and tool results. Disconnec
 ## Future implementation record
 
 T01-02 and T01-03 will record actual structure and orchestration. Stages 2–4 will record schema, transport and lifecycle behavior. No endpoint, migration owner or runtime-storage behavior is verified yet.
+
+## Implemented shells
+
+The solution contains src/CiCdInvestigator.AppHost, src/CiCdInvestigator.Api and src/CiCdInvestigator.McpServer. The separately built React/TypeScript/Vite frontend is src/cicd-investigator-web. Both servers expose /health; API exposes /api/status. No unused ServiceDefaults or Shared project was introduced.
