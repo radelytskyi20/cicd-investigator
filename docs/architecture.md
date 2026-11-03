@@ -21,3 +21,7 @@ T01-02 and T01-03 will record actual structure and orchestration. Stages 2–4 w
 ## Implemented shells
 
 The solution contains src/CiCdInvestigator.AppHost, src/CiCdInvestigator.Api and src/CiCdInvestigator.McpServer. The separately built React/TypeScript/Vite frontend is src/cicd-investigator-web. Both servers expose /health; API exposes /api/status. No unused ServiceDefaults or Shared project was introduced.
+
+## Implemented orchestration
+
+AppHost owns SQL Server, API, one MCP process and Vite. SQL publishes external port 14330 through Aspire's proxy, with persistent named volume cicd-investigator-data and a local secret. API receives the MCP endpoint; frontend receives the API endpoint. Domain migrations and MCP protocol tools are still planned.

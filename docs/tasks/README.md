@@ -34,7 +34,7 @@ G1: Codex-ready repository and verified environment; AppHost starts SQL, API, MC
 - [T01-00 Prepare the repository for Codex](T01-00.md) | Done | Depends on: none
 - [T01-01 Configure the development environment and pin versions](T01-01.md) | Done | Depends on: [T01-00](T01-00.md)
 - [T01-02 Scaffold the solution and applications](T01-02.md) | Ready for review | Depends on: [T01-01](T01-01.md)
-- [T01-03 Orchestrate the local stack with Aspire](T01-03.md) | Planned | Depends on: [T01-02](T01-02.md)
+- [T01-03 Orchestrate the local stack with Aspire](T01-03.md) | Ready for review | Depends on: [T01-02](T01-02.md)
 
 ## Stage 2 Domain data and MCP server
 
@@ -77,6 +77,6 @@ The owner approved these five slices, preserving the 19 parent task IDs. The own
 
 - [T01-01-01 Verify prerequisites and pin compatible versions](T01-01-01.md) | Done | Blocked by: T01-00 (Done)
 - [T01-02-01 Build and launch the application shells](T01-02-01.md) | Ready for review | Blocked by: T01-01-01
-- [T01-03-01 Run SQL Server and verify EF connectivity through Aspire](T01-03-01.md) | Planned | Blocked by: T01-02-01
-- [T01-03-02 Launch the complete local stack from AppHost](T01-03-02.md) | Planned | Blocked by: T01-03-01
-- [T01-03-03 Verify restart and document reproducible startup](T01-03-03.md) | Planned | Blocked by: T01-03-02
+- [T01-03-01 Run SQL Server and verify EF connectivity through Aspire](T01-03-01.md) | Ready for review | Blocked by: T01-02-01
+- [T01-03-02 Launch the complete local stack from AppHost](T01-03-02.md) | Ready for review | Blocked by: T01-03-01
+- [T01-03-03 Verify restart and document reproducible startup](T01-03-03.md) | Ready for review | Blocked by: T01-03-02

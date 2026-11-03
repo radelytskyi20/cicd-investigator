@@ -75,3 +75,24 @@ Keep credentials in local secrets; never commit runtime session files. Copilot a
 - Frontend: `node node_modules/vite/bin/vite.js --host 127.0.0.1` from its directory.
 - Live /health checks returned Healthy on both hosts. Browser at http://127.0.0.1:5173 displayed API connected through the Vite proxy. No domain MCP endpoint exists yet.
 - The T01-01 temporary compatibility folder was deleted at the owner's request; its historical checks are retained above.
+
+## T01-03 local orchestration
+
+Set a strong SQL password once in AppHost user secrets (Parameters:sql-password). Keep the same secret when reusing the volume. The AppHost Development profile loads it; never commit the value. The first generated-password experiment used cicd-investigator-sql-data, which is retained unused after a restart login mismatch. The working named volume is cicd-investigator-data. No old volume was deleted.
+
+```powershell
+# Use Node 24.22.1 on PATH, or pass its executable explicitly:
+./scripts/Start-Local.ps1 -NodePath "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe"
+# Equivalent direct startup, with the selected Node already on PATH:
+aspire run --detach --format Json --non-interactive
+aspire describe --apphost src/CiCdInvestigator.AppHost/CiCdInvestigator.AppHost.csproj --format Json
+aspire stop --apphost src/CiCdInvestigator.AppHost/CiCdInvestigator.AppHost.csproj --non-interactive
+```
+
+The script validates the Node pin; direct Aspire startup and stop were exercised. Aspire supplies dynamic API, MCP and frontend URLs; use describe/dashboard instead of hard-coding them. SQL's stable external endpoint is localhost:14330 (override with Sql__Port). Aspire proxies that endpoint to Docker's dynamically mapped container port 1433. Host port 1433 and invalid/occupied ports are rejected before resources start. The container image is pinned to mcr.microsoft.com/mssql/server:2022-CU27-ubuntu-22.04, verified in Microsoft's registry.
+
+The MCP /health check performs an EF Core connection to master until domain migrations exist. SQL readiness does not depend on future domain tables. API waits for MCP, frontend waits for API. AddNodeApp runs Vite with the selected Node executable; Aspire manages its process and endpoint. The dashboard uses HTTPS and its generated login token. Never commit that token or full resource/environment dumps.
+
+The named volume survives stop/restart. Aspire's stop command can return shortly before container cleanup finishes; wait for cleanup before restarting if a port remains occupied. The installed DCP emitted notification-socket warnings on Windows; resources and health checks still ran, so these warnings are recorded rather than mistaken for application success or failure.
+
+Use `./scripts/Stop-Local.ps1` for a stop that waits for SQL container shutdown before a restart. Immediate stop/start exposed a SQL instance-lock race; restarting the SQL resource after old container cleanup recovered it. Subsequent API/MCP health and frontend proxy requests all returned 200 with one SQL container and one MCP process. The named volume and stable password survived. G1 is submitted for review with this observed runtime limitation.

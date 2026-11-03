@@ -5,6 +5,8 @@
     <UserSecretsId>cicd-investigator-apphost</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.SqlServer" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
     <ProjectReference Include="../CiCdInvestigator.Api/CiCdInvestigator.Api.csproj" />
     <ProjectReference Include="../CiCdInvestigator.McpServer/CiCdInvestigator.McpServer.csproj" />
   </ItemGroup>

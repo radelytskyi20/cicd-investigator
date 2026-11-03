@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "src/CiCdInvestigator.AppHost/CiCdInvestigator.AppHost.csproj"
+  }
+}
