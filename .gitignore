@@ -1,0 +1,40 @@
+# Build, package and test output
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/coverage/
+**/TestResults/
+**/playwright-report/
+**/test-results/
+*.tsbuildinfo
+
+# Local IDE and operating system files
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+.DS_Store
+Thumbs.db
+
+# Credentials and local configuration; commit only sanitized examples
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.Local.json
+**/secrets.json
+.aws/
+*.pfx
+*.p12
+*.key
+*.pem
+
+# Application-owned transient sessions and runtime artifacts
+.copilot/
+.runtime/
+.sessions/
+**/session-state/
+*.log
+.scratch/
