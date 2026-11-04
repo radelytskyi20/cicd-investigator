@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Application shells and Aspire orchestration are implemented and accepted. Domain data and agent behavior remain planned.
+Status: Application shells and Aspire orchestration are implemented and accepted. Initial domain data is implemented and Ready for review; agent behavior remains planned.
 
 ## Planned components
 
@@ -24,4 +24,12 @@ The solution contains src/CiCdInvestigator.AppHost, src/CiCdInvestigator.Api and
 
 ## Implemented orchestration
 
-AppHost owns SQL Server, API, one MCP process and Vite. SQL publishes external port 14330 through Aspire's proxy, with persistent named volume cicd-investigator-data and a local secret. API receives the MCP endpoint; frontend receives the API endpoint. Domain migrations and MCP protocol tools are still planned.
+AppHost owns SQL Server, API, one MCP process and Vite. SQL publishes external port 14330 through Aspire's proxy, with persistent named volume cicd-investigator-data and a local secret. API receives the MCP endpoint; frontend receives the API endpoint. Domain migrations are implemented in T02-01; MCP protocol tools remain planned.
+
+## Implemented initial data (T02-01)
+
+CiCdInvestigator.Data contains the EF model, initial migration and a compact mock-v1 seed. The MCP host applies migrations and seeds before listening; API does not initialize the database. The Data library is reused by the host and SQL integration test, with API queries deferred to later tasks. There are no generic repositories or additional domain layers.
+
+AppHost maps the investigator resource to investigator-prototype in the existing SQL container. This isolates the approved schema from the withdrawn experiment without deleting prior data. Each job row identifies one run/name/attempt; logs use job identity plus position, and tests refer to that job. Dataset version is obtained through the owning run. Source status belongs to the job's logs/tests or the run's change set; Complete, Empty, Unavailable, NotFound and Truncated are distinct. Not-requested is a future query/session concern, not a stored source state. Optional steps are omitted for this fixture.
+
+Only S01 is seeded. Migration/seed operations use ordinary EF APIs and one SaveChanges call, without custom transaction infrastructure. The seed is intended for a fixed local dataset, not automatic repair of manually edited fixtures. MCP tools, domain query services, reports and SDK sessions remain unimplemented.

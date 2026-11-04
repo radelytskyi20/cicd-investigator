@@ -4,7 +4,7 @@ A planned local learning project demonstrating evidence-based CI/CD investigatio
 
 ## Current state
 
-Repository preparation in [T01-00](docs/tasks/T01-00.md) is complete and accepted by the owner. T01-01 is accepted; T01-02 application shells and T01-03 orchestration are accepted (Done). Backend/frontend builds and browser API connectivity pass. T01-03 starts SQL/API/MCP/frontend through Aspire; health and browser checks pass. The four T02-01 subtasks are also approved for execution, targeting a minimal one-time local prototype. Domain functionality and Stage 2-5 require a separate task breakdown and owner approval. Historical observations from the withdrawn Stage 2-3 experiment are retained in [archived research](docs/research/deferred-stage-2-3.md). See docs/development.md for local secrets, Node selection and startup/shutdown.
+Repository preparation in [T01-00](docs/tasks/T01-00.md) is complete and accepted by the owner. T01-01 is accepted; T01-02 application shells and T01-03 orchestration are accepted (Done). Backend/frontend builds and browser API connectivity pass. T01-03 starts SQL/API/MCP/frontend through Aspire; health and browser checks pass. The four T02-01 subtasks are implemented and Ready for review: EF migrations, initial S01 data and a real SQL smoke. T02-02 and subsequent tasks still require separate approval. Historical observations from the withdrawn Stage 2-3 experiment are retained in [archived research](docs/research/deferred-stage-2-3.md). See docs/development.md for local secrets, Node selection and startup/shutdown.
 
 ## Planned stack and behavior
 

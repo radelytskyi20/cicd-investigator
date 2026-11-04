@@ -2,6 +2,10 @@
   <Folder Name="/src/">
     <Project Path="src/CiCdInvestigator.Api/CiCdInvestigator.Api.csproj" />
     <Project Path="src/CiCdInvestigator.AppHost/CiCdInvestigator.AppHost.csproj" />
+    <Project Path="src/CiCdInvestigator.Data/CiCdInvestigator.Data.csproj" />
     <Project Path="src/CiCdInvestigator.McpServer/CiCdInvestigator.McpServer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CiCdInvestigator.Data.Tests/CiCdInvestigator.Data.Tests.csproj" />
   </Folder>
 </Solution>

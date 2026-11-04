@@ -12,7 +12,7 @@ var password = builder.AddParameter("sql-password", secret: true);
 var sql = builder.AddSqlServer("sql", password, port: sqlPort)
     .WithImageTag("2022-CU27-ubuntu-22.04")
     .WithDataVolume("cicd-investigator-data");
-var database = sql.AddDatabase("investigator");
+var database = sql.AddDatabase("investigator", "investigator-prototype");
 var mcp = builder.AddProject<Projects.CiCdInvestigator_McpServer>("mcp")
     .WithHttpEndpoint().WithHttpHealthCheck("/health")
     .WithReference(database).WaitFor(sql);

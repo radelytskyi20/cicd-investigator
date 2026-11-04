@@ -104,3 +104,13 @@ At the owner's request the active code/history was returned to the five approved
 After removing stale generated .NET artifacts, the solution build passed with zero warnings/errors; the selected Node 24.22.1 frontend type check and production build passed. The project stack was stopped with Stop-Local and restarted through Aspire. SQL was healthy on the configured 14330 endpoint, API and MCP /health returned 200, and the frontend /api/status proxy returned ready. One project SQL container and one MCP process were observed. The deferred /mcp route returned 404 as expected for the shell.
 
 SQL volumes and local secrets were retained. The volume may still contain the earlier synthetic investigator database; the restored EF health check uses master and neither reads domain tables nor applies migrations. No Copilot analysis runs at startup. Foundation tasks retain their previous review statuses; later-stage tasks are Planned and require a new small-task breakdown and approval.
+
+## T02-01 data checks
+
+The MCP host now migrates and seeds investigator-prototype before /health can report ready; health reads the initialized run instead of connecting to master. The old synthetic database is retained untouched. The dedicated investigator-smoke-t0201 database is retained for inspection and contains only test fixtures.
+
+With the Aspire stack running, execute `./scripts/Test-Data.ps1`. It reads the existing local AppHost secret without printing it, discovers the container's published IPv4 SQL port, and runs the xUnit SQL integration check. A first attempt through localhost:14330 timed out; the published container port passed. This script uses the documented Windows local secrets location. On other machines set INVESTIGATOR_TEST_SQL to a dedicated test database and run `dotnet test tests/CiCdInvestigator.Data.Tests --verbosity minimal`.
+
+EF migration generation used `.scratch/tools/dotnet-ef migrations add InitialDataset --project src/CiCdInvestigator.Data`, with dotnet-ef 10.0.14 installed under ignored .scratch/tools. Microsoft.EntityFrameworkCore.Design is pinned to 10.0.14. Test packages are pinned to available xUnit 2.9.3, runner 3.0.2 and Microsoft.NET.Test.Sdk 17.12.0. Test failures remain failures when no SQL connection is supplied; they are not silently skipped.
+
+Verified T02-01 results: solution build passed with zero warnings/errors after stopping running binaries. The SQL integration test passed on fresh initialization and again after full Aspire stop/start. After restart, MCP and API /health returned 200 and the frontend /api/status proxy returned ready. Frontend source was unchanged; no new browser interaction or SDK/MCP protocol verification is claimed.

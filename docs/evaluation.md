@@ -17,3 +17,7 @@ Check facts, source ownership, meaningful tool use, competing hypotheses, confid
 ## Evaluator isolation
 
 Future answer keys belong outside agent-visible sources, prompts and runtime working directories. This developer-facing document and the scenario descriptions are not runtime Investigator instructions. No evaluation runs have been performed.
+
+## T02-01 evaluator notes (not runtime data)
+
+The initial mock-v1 fixture uses run-101 as the successful predecessor and run-102 as the failed target. The relevant change removes MidpointRounding.AwayFromZero from decimal rounding. For 1.005m, the old expression returns 1.01m and the new expression returns 1.00m. The test and log agree. The cache warning appears in both runs and does not explain the changed test result. Do not infer that a repair was performed. These expectations are not seeded into SQL or copied into application output.

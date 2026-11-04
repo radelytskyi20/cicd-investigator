@@ -1,3 +1,4 @@
+using CiCdInvestigator.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -8,13 +9,9 @@ public sealed class SqlConnectivityCheck(IServiceScopeFactory scopeFactory) : IH
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
         await using var scope = scopeFactory.CreateAsyncScope();
-        var database = scope.ServiceProvider.GetRequiredService<ConnectivityContext>();
-        // No domain schema exists yet. Check the server's master database only.
-        var connection = database.Database.GetDbConnection();
-        var settings = new Microsoft.Data.SqlClient.SqlConnectionStringBuilder(connection.ConnectionString) { InitialCatalog = "master" };
-        connection.ConnectionString = settings.ConnectionString;
-        return await database.Database.CanConnectAsync(cancellationToken)
-            ? HealthCheckResult.Healthy("EF Core SQL connection succeeded.")
-            : HealthCheckResult.Unhealthy("SQL Server is unavailable.");
+        var database = scope.ServiceProvider.GetRequiredService<InvestigatorContext>();
+        return await database.Runs.AnyAsync(x => x.Id == "run-102", cancellationToken)
+            ? HealthCheckResult.Healthy("Initial dataset is ready.")
+            : HealthCheckResult.Unhealthy("Initial dataset is missing.");
     }
 }

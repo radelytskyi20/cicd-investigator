@@ -41,3 +41,7 @@ On November 4, 2026 the owner clarified that execution approval covers only the 
 The owner accepted all Foundation tasks previously Ready for review, completing G1, and approved the four T02-01 subtasks in the task index. This supersedes foundation-only authorization for T02-01 only; subsequent tasks still need approval.
 
 Build a minimal one-time local working prototype, not a deployed production service. Prefer simple EF operations. Do not invest in custom transaction orchestration, extensive durability testing, connection stress testing or broad protocol matrices. Keep relevant builds and minimal functional checks: a real SQL-backed data smoke and, when MCP tools exist, a minimal protocol-client smoke. Real SDK verification remains separate from fake adapters. Evidence identities and session boundaries remain required.
+
+## T02-01 implementation choices
+
+MCP owns migration and seed before readiness. The investigator Aspire resource maps to investigator-prototype, isolating the withdrawn experiment's database without deleting it. The Data library holds actual EF logic reused by MCP and the SQL smoke; API consumption is deferred. Optional steps are omitted. The prototype uses ordinary EF SaveChanges and a fixed idempotent seed, without custom transaction or recovery infrastructure.
