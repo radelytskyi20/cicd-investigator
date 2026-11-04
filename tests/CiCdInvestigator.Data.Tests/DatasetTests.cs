@@ -1,4 +1,5 @@
 using CiCdInvestigator.Data;
+using CiCdInvestigator.Data.Queries;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -60,5 +61,74 @@ public sealed class DatasetTests
                 Assert.Equal(status, baselineJob.LogsStatus);
             }
         }
+    }
+    [Fact]
+    public async Task QueriesReturnScopedEvidenceAndQualifiedBaseline()
+    {
+        string connection = Environment.GetEnvironmentVariable("INVESTIGATOR_TEST_SQL")
+            ?? throw new InvalidOperationException("Set INVESTIGATOR_TEST_SQL to a disposable SQL Server database.");
+        var options = new DbContextOptionsBuilder<InvestigatorContext>().UseSqlServer(connection).Options;
+        await using var database = new InvestigatorContext(options);
+        await InitialDataset.InitializeAsync(database);
+        var queries = new InvestigationQueries(database);
+        var runs = await queries.ListRunsAsync("pricing-ci", "refs/heads/main", Outcome.Failed);
+        Assert.Equal("run-102", Assert.Single(runs.Data!).Id);
+        Assert.Empty((await queries.ListRunsAsync("absent")).Data!);
+        Assert.Equal(QueryStatus.InvalidInput, (await queries.ListRunsAsync(outcome: (Outcome)99)).Status);
+        Assert.Equal(QueryStatus.NotFound, (await queries.GetRunAsync("absent")).Status);
+        Assert.Equal(QueryStatus.InvalidInput, (await queries.GetRunAsync(" ")).Status);
+        Assert.Equal(1, Assert.Single((await queries.GetRunAsync("run-102")).Data!.Jobs).Attempt);
+        var log = (await queries.ReadLogAsync("run-102", "job-102-test-1", 1, count: 2)).Data!;
+        Assert.Equal(SourceStatus.Complete, log.SourceStatus);
+        Assert.True(log.HasMore);
+        Assert.Equal(2, log.LastLine);
+        Assert.Equal("mock-v1", log.Identity.DatasetVersion);
+        Assert.Equal(QueryStatus.NotFound, (await queries.ReadLogAsync("run-101", "job-102-test-1", 1)).Status);
+        Assert.Equal(QueryStatus.NotFound, (await queries.GetTestsAsync("run-102", "job-102-test-1", 2)).Status);
+        Assert.Equal(QueryStatus.InvalidInput, (await queries.ReadLogAsync("run-102", "job-102-test-1", 1, count: 201)).Status);
+        Assert.Empty((await queries.ReadLogAsync("run-102", "job-102-test-1", 1, start: 99)).Data!.Lines);
+        var tail = (await queries.ReadLogAsync("run-102", "job-102-test-1", 1, start: 3)).Data!;
+        Assert.Contains("expected 1.01; actual 1.00", Assert.Single(tail.Lines).Text);
+        Assert.False(tail.HasMore);
+        Assert.Equal(Outcome.Failed, Assert.Single((await queries.GetTestsAsync("run-102", "job-102-test-1", 1)).Data!.Tests).Outcome);
+        var changes = (await queries.GetChangesAsync("run-102")).Data!;
+        Assert.Equal("revision-101", changes.BaseCommitId);
+        Assert.Contains("MidpointRounding.AwayFromZero", changes.Patch);
+        Assert.Equal(SourceStatus.Unavailable, (await queries.GetChangesAsync("run-101")).Data!.SourceStatus);
+        var baseline = (await queries.FindBaselineAsync("run-102")).Data!;
+        Assert.Equal("run-101", baseline.Candidate!.Id);
+        Assert.Empty(baseline.Limitations);
+        Assert.Null((await queries.FindBaselineAsync("run-101")).Data!.Candidate);
+        Assert.Equal(QueryStatus.NotFound, (await queries.FindBaselineAsync("absent")).Status);
+        Assert.Empty(database.ChangeTracker.Entries());
+
+        // Test-local variations roll back; the demonstration fixture remains unchanged.
+        await using var transaction = await database.Database.BeginTransactionAsync();
+        var job = await database.Jobs.SingleAsync(x => x.Id == "job-102-test-1");
+        job.LogsStatus = SourceStatus.Truncated;
+        job.TestsStatus = SourceStatus.Unavailable;
+        database.Tests.RemoveRange(await database.Tests.Where(x => x.JobId == job.Id).ToListAsync());
+        var predecessor = await database.Runs.SingleAsync(x => x.Id == "run-101");
+        predecessor.Environment = "different-sdk";
+        predecessor.Configuration = null;
+        var predecessorJob = await database.Jobs.SingleAsync(x => x.Id == "job-101-test-1");
+        predecessorJob.Name = "different-job";
+        var storedChanges = await database.Changes.SingleAsync(x => x.RunId == "run-101");
+        storedChanges.Status = SourceStatus.Empty;
+        storedChanges.Patch = "";
+        await database.SaveChangesAsync();
+        var partial = (await queries.ReadLogAsync("run-102", job.Id, 1)).Data!;
+        Assert.Equal(SourceStatus.Truncated, partial.SourceStatus);
+        Assert.False(partial.HasMore);
+        var missingTests = (await queries.GetTestsAsync("run-102", job.Id, 1)).Data!;
+        Assert.Equal(SourceStatus.Unavailable, missingTests.SourceStatus);
+        Assert.Empty(missingTests.Tests);
+        Assert.Equal(SourceStatus.Empty, (await queries.GetChangesAsync("run-101")).Data!.SourceStatus);
+        var limited = (await queries.FindBaselineAsync("run-102")).Data!;
+        Assert.Equal("run-101", limited.Candidate!.Id);
+        Assert.Contains("Environment/SDK differs.", limited.Limitations);
+        Assert.Contains("Configuration is unknown for at least one run.", limited.Limitations);
+        Assert.Contains("Job sets differ.", limited.Limitations);
+        await transaction.RollbackAsync();
     }
 }

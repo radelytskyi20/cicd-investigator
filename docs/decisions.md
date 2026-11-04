@@ -45,3 +45,7 @@ Build a minimal one-time local working prototype, not a deployed production serv
 ## T02-01 implementation choices
 
 MCP owns migration and seed before readiness. The investigator Aspire resource maps to investigator-prototype, isolating the withdrawn experiment's database without deleting it. The Data library holds actual EF logic reused by MCP and the SQL smoke; API consumption is deferred. Optional steps are omitted. The prototype uses ordinary EF SaveChanges and a fixed idempotent seed, without custom transaction or recovery infrastructure.
+
+## T02-02 approved prototype scope (November 4, 2026)
+
+The owner approved the four T02-02 slices and implementation. Simplicity is required wherever the demonstration allows it. Use a single concrete EF query service and small result records; no new architecture layers. Read log ranges only (1-200 lines). Select the nearest eligible baseline by strictly earlier StartedAt, breaking timestamp ties by ID. Compare available environment/SDK text without a parser, configuration and job names; unknown values remain limitations. Keep a noncomparable candidate visible instead of implementing fallback scoring. Stored changes retain their own base revision. T02-03 and later work still require approval.

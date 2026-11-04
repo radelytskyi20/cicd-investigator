@@ -114,3 +114,9 @@ With the Aspire stack running, execute `./scripts/Test-Data.ps1`. It reads the e
 EF migration generation used `.scratch/tools/dotnet-ef migrations add InitialDataset --project src/CiCdInvestigator.Data`, with dotnet-ef 10.0.14 installed under ignored .scratch/tools. Microsoft.EntityFrameworkCore.Design is pinned to 10.0.14. Test packages are pinned to available xUnit 2.9.3, runner 3.0.2 and Microsoft.NET.Test.Sdk 17.12.0. Test failures remain failures when no SQL connection is supplied; they are not silently skipped.
 
 Verified T02-01 results: solution build passed with zero warnings/errors after stopping running binaries. The SQL integration test passed on fresh initialization and again after full Aspire stop/start. After restart, MCP and API /health returned 200 and the frontend /api/status proxy returned ready. Frontend source was unchanged; no new browser interaction or SDK/MCP protocol verification is claimed.
+
+## T02-02 query verification
+
+Run `./scripts/Test-Data.ps1` with the local Aspire SQL container running. Both tests passed: the original data smoke and the query smoke. Coverage includes filtered S01 reads, unknown/invalid inputs, job-attempt isolation, bounded and source-truncated logs, missing tests, stored diff scope, empty versus unavailable changes, absent baseline and qualified noncomparable baseline. Edge-case changes are test-local and rolled back; no extra demonstration scenarios were seeded. No MCP protocol, SDK or new browser verification is claimed.
+
+The full solution build passed with zero warnings/errors after stopping the running stack to release binaries. Aspire was started again afterward. git diff --check passed.
