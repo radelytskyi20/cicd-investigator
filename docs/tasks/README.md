@@ -51,7 +51,7 @@ G3: real SDK uses MCP tools, runs the agent loop, demonstrates session memory an
 
 - [T03-01 Validate Copilot SDK with the MCP server](T03-01.md) | Done | Depends on: [T02-04](T02-04.md)
 - [T03-02 Implement connection-scoped agent sessions](T03-02.md) | Done | Depends on: [T03-01](T03-01.md)
-- [T03-03 Implement investigation behavior and report validation](T03-03.md) | Ready for review | Depends on: [T03-02](T03-02.md)
+- [T03-03 Implement investigation behavior and report validation](T03-03.md) | Done | Depends on: [T03-02](T03-02.md)
 - [T03-04 Verify agent loop memory and cancellation](T03-04.md) | Planned | Depends on: [T03-03](T03-03.md)
 
 ## Stage 4 API and minimal user interface
@@ -134,5 +134,5 @@ Single-client, sequential prototype scope; both slices approved for execution. T
 
 Both compact-report slices are approved for execution. T03-04 remains unapproved.
 
-- [T03-03-01 Produce an evidence-validated investigation report for S01](T03-03-01.md) | Ready for review | Blocked by: T03-02 (Done)
-- [T03-03-02 Handle insufficient evidence and invalid reports](T03-03-02.md) | Ready for review | Blocked by: T03-03-01
+- [T03-03-01 Produce an evidence-validated investigation report for S01](T03-03-01.md) | Done | Blocked by: T03-02 (Done)
+- [T03-03-02 Handle insufficient evidence and invalid reports](T03-03-02.md) | Done | Blocked by: T03-03-01
