@@ -1,18 +1,35 @@
 # API contracts
 
-Status: SignalR investigation transport is implemented in T03-02 and accepted (Done). Catalog REST APIs and completed-report storage remain planned.
+Status: SignalR investigation transport is accepted through Stage 3. The reduced Stage 4 REST/save/history implementation is ready for review; report revisions and catalog filters are deferred.
 
-## Planned read APIs
+## Implemented read APIs (reduced Stage 4)
 
-T04-01 will document catalog filters, run/job/log/test/change/baseline reads, source identity, completeness and distinct error responses. User-facing reads must not replace the Investigator's MCP access.
+These user-facing reads reuse InvestigationQueries; the Investigator still reads facts through MCP. Success returns `{ status: "Ok", data, error: null }` with camelCase properties and string enums. Domain invalid input is 400, missing identity is 404, and execution failure is a generic 500 rather than empty data. No filtering or pagination is implemented for the tiny catalog.
+
+| Method and route | Result |
+| --- | --- |
+| GET /api/runs | All runs, descending StartedAt then ID |
+| GET /api/runs/{runId} | Run metadata and jobs/attempts |
+| GET /api/runs/{runId}/baseline | Default qualified candidate and comparison limitations |
+| GET /api/runs/{runId}/changes | Commit, stored patch/base revision and completeness |
+| GET /api/runs/{runId}/jobs/{jobId}/logs?attempt=1&start=1&count=100 | Bounded positioned log page; count 1–200 |
+| GET /api/runs/{runId}/jobs/{jobId}/tests?attempt=1 | Attempt-specific tests and completeness |
+
+Run, changes, logs and tests accept optional `datasetVersion`. A supplied version that differs from the stored run returns 410 with an explicit unavailable-source message. This prevents substitution but is not a historical source archive. UI evidence links include that version and use the original `sourceLocator` line for log reads. Unavailable/truncated/empty source states remain within successful source results.
 
 ## Implemented session transport
 
 SignalR implements start, follow-up, Stop and actual progress/tool events. The implemented T03-02 contract is recorded below. Automatic reconnect and session resume are excluded.
 
-## Planned completed-report storage
+## Implemented completed-report storage (reduced Stage 4)
 
-T03-03 defines validated report output. T04-01 will define ready-result identity, explicit idempotent Save, revisions, report history and write failures. No transient conversation or interrupted draft is saved. See [requirements](requirements.md).
+`answerReady.report` now includes `resultId` (a server-generated GUID). Only the latest validated result is saveable while the current SDK session is open and idle. A successful follow-up replaces it; Stop or validation failure can leave the previous result available. A fresh Start, disconnect or disposal clears it. No transient conversation or interrupted draft is stored.
+
+- `POST /api/reports` accepts `{ "resultId": "<guid>" }`, not report JSON. Returns 200 with `{ id, savedAt, runId }` only after SQL succeeds. Repeating the same ID returns the same row. Busy, unknown or expired results return 409; malformed input is 400; storage failure is 500 and does not consume the ready result.
+- `GET /api/reports` returns an array of `{ id, savedAt, runId, goal, outcome, summary }`, newest saved first.
+- `GET /api/reports/{id}` returns `{ id, savedAt, runId, goal, result }`, where `result` is the stored ReadyReport. Unknown GUID is 404.
+
+One SavedReports table stores immutable independent reports. No Investigation/ReportRevision hierarchy or revisions endpoint is implemented. Opening a report never creates or resumes an SDK session. Saved quotations remain in report JSON even when original sources become unavailable. The API and active agent share a gate so Save does not race a turn or replace its content with client input. This is a single-client local prototype, not a multi-user authorization boundary.
 
 ## Implemented single-client investigation transport (T03-02)
 

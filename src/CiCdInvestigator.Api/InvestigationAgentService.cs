@@ -2,8 +2,10 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Channels;
+using CiCdInvestigator.Data;
 using GitHub.Copilot;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CiCdInvestigator.Api;
 
@@ -11,6 +13,7 @@ public sealed class InvestigationAgentService(
     IConfiguration configuration,
     IHubContext<InvestigationHub> hub,
     IHostApplicationLifetime lifetime,
+    IServiceScopeFactory scopeFactory,
     ILogger<InvestigationAgentService> logger) : IHostedService
 {
     private readonly SemaphoreSlim _turnGate = new(1, 1);
@@ -20,6 +23,30 @@ public sealed class InvestigationAgentService(
     private CopilotSession? _session;
     private InvestigationEvidence _evidence = new();
     private InvestigationRequest? _target;
+    private ReadyReport? _readyReport;
+
+    public async Task<SavedReport?> SaveAsync(Guid resultId, CancellationToken cancellationToken)
+    {
+        if (!await _turnGate.WaitAsync(0, cancellationToken)) return null;
+        try
+        {
+            if (_readyReport is null || _readyReport.ResultId != resultId || _target is null) return null;
+            await using var scope = scopeFactory.CreateAsyncScope();
+            var database = scope.ServiceProvider.GetRequiredService<InvestigatorContext>();
+            var existing = await database.SavedReports.AsNoTracking().SingleOrDefaultAsync(report => report.Id == resultId, cancellationToken);
+            if (existing is not null) return existing;
+            var saved = new SavedReport
+            {
+                Id = resultId, SavedAt = DateTimeOffset.UtcNow, RunId = _target.RunId, Goal = _target.Goal,
+                Outcome = _readyReport.Report.Outcome, Summary = _readyReport.Report.Summary,
+                ReportJson = JsonSerializer.Serialize(_readyReport, new JsonSerializerOptions(JsonSerializerDefaults.Web))
+            };
+            database.SavedReports.Add(saved);
+            await database.SaveChangesAsync(cancellationToken);
+            return saved;
+        }
+        finally { _turnGate.Release(); }
+    }
 
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     public async Task StopAsync(CancellationToken cancellationToken) => await CloseAsync();
@@ -111,7 +138,8 @@ public sealed class InvestigationAgentService(
             if (string.IsNullOrWhiteSpace(answer?.Data.Content)) throw new InvalidOperationException("SDK returned no answer.");
             var report = ReportValidator.Validate(answer.Data.Content, _evidence, _target!);
             cancellation.Token.ThrowIfCancellationRequested();
-            events.Writer.TryWrite(new("answerReady", turnId, Report: new(report, stopwatch.ElapsedMilliseconds, toolCalls, _evidence.Scope())));
+            _readyReport = new(report, stopwatch.ElapsedMilliseconds, toolCalls, _evidence.Scope(), Guid.NewGuid());
+            events.Writer.TryWrite(new("answerReady", turnId, Report: _readyReport));
         }
         catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
         {
@@ -195,6 +223,7 @@ public sealed class InvestigationAgentService(
         {
             _session = null;
             _target = null;
+            _readyReport = null;
             _evidence = new InvestigationEvidence();
             if (_client is not null) await _client.DisposeAsync();
             _client = null;

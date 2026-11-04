@@ -11,6 +11,7 @@ public sealed class InvestigatorContext(DbContextOptions<InvestigatorContext> op
     public DbSet<TestResult> Tests => Set<TestResult>();
     public DbSet<Commit> Commits => Set<Commit>();
     public DbSet<ChangeSet> Changes => Set<ChangeSet>();
+    public DbSet<SavedReport> SavedReports => Set<SavedReport>();
 
     protected override void OnModelCreating(ModelBuilder model)
     {

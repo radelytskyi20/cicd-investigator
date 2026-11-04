@@ -1,5 +1,9 @@
 # Current MVP requirements
 
+## Approved demo scope override (November 4, 2026)
+
+For the time-bounded Stage 4 demo, the owner approved a reduced implementation of the broader requirements below: the existing S01 failed/successful pair, plain run selection and source inspection, a real SDK/MCP investigation, same-session follow-up, Stop, explicit report Save and basic history. Each saved completed result is independent and immutable; revision grouping, catalog filters, manual baseline UI, full chat UI, historical source reconstruction and additional scenarios are deferred. Do not describe these deferred features as implemented. Preserve idempotent Save, validated result ownership, truthful errors, source identity and disconnect cancellation. A focused real happy-path verification replaces a broad error/browser matrix. See decisions.md for execution authorization; Stage 5 evaluation remains separate.
+
 This English implementation baseline consolidates PRD v0.3 and later accepted decisions. It preserves the agreed product scope while explicitly replacing the old blanket memory exclusion with active-session memory. Historical Russian review documents are not repository documentation inputs once this baseline is adopted.
 
 ## Product and actors

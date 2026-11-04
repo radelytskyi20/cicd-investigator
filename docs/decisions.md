@@ -1,5 +1,17 @@
 # Implementation decisions
 
+## Approved Stage 4 demo reduction (November 4, 2026)
+
+The owner authorized the reduced Stage 4 as one sequential delivery for a working local demo by 15:30 Europe/Budapest. This supersedes the earlier requirement for separate Stage 4 execution approvals and the broader original task acceptance scope.
+
+Use the existing S01 failed run and successful baseline. Implement a plain run list, source details, real SDK/MCP investigation, actual tool activity, compact report, same-session follow-up, Stop, explicit Save and a basic saved-report list/open action. Keep the single-client model. No new scenario catalog is required for this delivery.
+
+Each explicitly saved completed result is an independent immutable report. Revision grouping and significant-change detection are deferred. Save uses a server-owned ready-result ID and is idempotent for that ID. Only the latest validated result is saveable while its session is open and idle; a successful follow-up replaces it. Stop or validation failure can retain the previous result if the session remains alive. A fresh Start or session disposal clears it. No auto-save or persistent chat is introduced.
+
+Catalog filters, manual baseline UI, full chat transcript UI, rich source viewers and historical source reconstruction are deferred. Version mismatches must still never silently substitute a different source. Retain basic errors without building an extensive failure matrix.
+
+Verify changed builds, existing report validation tests, official MCP client connectivity and a real browser happy path (S01, follow-up, evidence, Save, reopen). Check Stop, tab closure and saved history after restart once. Do not add a fake SDK or broad browser suite merely for this stage. Stage 5 full catalog and repeated evaluation remain unapproved. Owner acceptance of Done/G4 and merges remains separate.
+
 ## Accepted baseline
 
 The project is a local AI CI/CD Investigator with React, TypeScript and Vite SPA; ASP.NET Core Web API; separate .NET MCP server; SQL Server in Docker; EF Core; and Aspire as the startup orchestrator. GitHub.Copilot.SDK for .NET controls a compatible Copilot CLI runtime.

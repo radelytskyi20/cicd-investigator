@@ -4,4 +4,5 @@
     <CopilotSkipCliDownload>true</CopilotSkipCliDownload>
   </PropertyGroup>
   <ItemGroup><PackageReference Include="GitHub.Copilot.SDK" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../CiCdInvestigator.Data/CiCdInvestigator.Data.csproj" /></ItemGroup>
 </Project>
