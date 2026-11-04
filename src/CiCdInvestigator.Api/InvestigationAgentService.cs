@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Channels;
@@ -168,6 +169,16 @@ public sealed class InvestigationAgentService(
         {
             outcome = "error";
             events.Writer.TryWrite(new("error", turnId, "Report validation failed: " + exception.Message + " You may explicitly retry in this conversation."));
+        }
+        catch (Win32Exception exception)
+        {
+            outcome = "error";
+            logger.LogWarning("Copilot process could not start: native error {NativeErrorCode}.", exception.NativeErrorCode);
+            string explanation = exception.NativeErrorCode is 2 or 3
+                ? "Copilot CLI was not found. Restart with Start-Local.ps1 -CopilotPath pointing to the installed copilot.exe."
+                : $"Copilot CLI could not start (Windows error {exception.NativeErrorCode}). Check the configured executable and its permissions.";
+            events.Writer.TryWrite(new("error", turnId, explanation));
+            await DisposeSessionAsync();
         }
         catch (Exception exception)
         {

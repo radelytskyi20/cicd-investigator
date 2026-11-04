@@ -2,6 +2,22 @@
 
 ## Current reduced Stage 4 demo (November 4, 2026)
 
+### Copilot executable resolution
+
+Start-Local.ps1 now resolves Copilot to an absolute executable path and passes it through AppHost to the API. Resolution order is explicit `-CopilotPath`, existing `Copilot__CliPath`, the current PATH, then the Windows installer location under LOCALAPPDATA/GitHubCopilotCLI/copilot.exe. A missing file fails before Aspire starts. No global PATH or authentication settings are changed.
+
+For an explicit launch on this machine:
+
+```powershell
+./scripts/Start-Local.ps1 -NodePath "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" -CopilotPath "$env:LOCALAPPDATA/GitHubCopilotCLI/copilot.exe"
+```
+
+For direct `aspire run`, supply `Copilot__CliPath` in the launching terminal if Copilot is absent from its PATH. Existing terminals may retain an older environment after CLI installation. An API process-launch Win32Exception now reports a useful UI message and logs its native error code without logging transcripts or credentials.
+
+Verified correction: Release build passed; invalid explicit executable paths fail before startup. Launching with the Copilot directory removed from PATH still produced a real browser S01 report (30.3 seconds, 8 MCP calls). The original terminal failure logged only Win32Exception, so the precise native failure code was not available retrospectively.
+
+### Verified demo
+
 The owner-approved demo is implemented and Ready for review. Use the existing startup/stop scripts and local credentials below. Aspire applies the SavedReports migration through MCP startup; API never races migrations. No manual SQL changes are needed. Ports are dynamic: take the web resource HTTP URL from `aspire describe --apphost src/CiCdInvestigator.AppHost/CiCdInvestigator.AppHost.csproj --format Json` or the dashboard.
 
 Verified commands for this delivery:
