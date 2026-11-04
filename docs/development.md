@@ -127,3 +127,16 @@ Run ./scripts/Test-Mcp.ps1 with one healthy Aspire MCP host. The script discover
 
 
 After one full Aspire stop/start, all resources became Healthy and the same protocol smoke passed again. One MCP process was observed. An immediate smoke attempt before readiness correctly refused to run; it passed once the host was Healthy.
+
+## T02-04 / G2 verification (November 4, 2026)
+
+With the solution built and Aspire SQL running:
+
+- `./scripts/Test-McpIntegration.ps1` — passed: existing six-tool protocol smoke plus one xUnit test for partial logs and distinct attempts on investigator-mcp-test.
+- `./scripts/Test-Mcp.ps1` — passed: ordinary Aspire demonstration path.
+- `./scripts/Test-Data.ps1` — passed: both existing SQL tests; now filters out the separately configured MCP category.
+- Changed test project and dependencies built during dotnet test without build errors or warnings. No production code changed in T02-04.
+
+The integration script uses the existing MCP host Debug/net10.0 executable, local AppHost secret and discovered container port. Build the solution before using it on a fresh checkout. It creates or reuses the named synthetic test database, starts a temporary host on loopback, waits for readiness and always stops its owned process. It leaves the test database for inspection; no test cleanup deletes databases or volumes. The extra test fixture is idempotent and remains outside the demonstration database. Host logs are ignored under .scratch/mcp-integration. The script never prints credentials.
+
+The MCP xUnit test requires INVESTIGATOR_MCP_TEST_SQL and INVESTIGATOR_MCP_TEST_URL; use the script to configure both. Test-Data remains the entry point for ordinary data tests. G2 is Ready for review, not owner-accepted. No Copilot authentication, agent loop or session-memory validation is claimed.

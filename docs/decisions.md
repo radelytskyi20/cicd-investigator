@@ -53,3 +53,7 @@ The owner approved the four T02-02 slices and implementation. Simplicity is requ
 ## T02-03 approval and implementation
 
 On November 4, 2026 the owner accepted T02-02 and all four subtasks and authorized T02-03-01 and T02-03-02. The minimal catalog contains six tools: jobs are included in get_run and find_baseline returns a single qualified candidate. Use stateless Streamable HTTP with one Aspire-owned process, per-call EF scope and JSON text results with explicit domain statuses. No AI integration or T02-04 acceptance is implied.
+
+## T02-04 execution approval
+
+On November 4, 2026 the owner approved T02-04-01. Reuse the existing real MCP client and host; add one focused xUnit integration test on a dedicated database for truncated logs and distinct attempts. This approval does not start Stage 3. G2 is submitted for owner review after successful checks.

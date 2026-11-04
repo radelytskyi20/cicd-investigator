@@ -24,7 +24,7 @@ Example assignment: Implement T01-00 from this package. Prepare the repository i
 - Done: accepted by the owner.
 - Blocked: progress requires resolution of a recorded blocker.
 
-G1 is accepted by the owner; G2-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
+G1 is accepted by the owner; G2 is Ready for review; G3-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
 
 
 ## Stage 1 Repository preparation environment and Aspire startup
@@ -43,7 +43,7 @@ G2: MCP protocol tests pass independently of the model against SQL Server.
 - [T02-01 Create the EF model and initial mock data](T02-01.md) | Done | Depends on: [T01-03](T01-03.md)
 - [T02-02 Implement domain queries and baseline selection](T02-02.md) | Done | Depends on: [T02-01](T02-01.md)
 - [T02-03 Expose the MCP server tools](T02-03.md) | Done | Depends on: [T02-02](T02-02.md)
-- [T02-04 Verify MCP independently of the model](T02-04.md) | Planned | Depends on: [T02-03](T02-03.md)
+- [T02-04 Verify MCP independently of the model](T02-04.md) | Ready for review | Depends on: [T02-03](T02-03.md)
 
 ## Stage 3 Copilot SDK agent and session memory
 
@@ -109,3 +109,9 @@ The owner accepted T02-02 and approved these two minimal MCP slices. T02-04 is n
 - [T02-03-02 Read investigation evidence through MCP](T02-03-02.md) | Done | Blocked by: T02-03-01
 
 The owner accepted T02-03 and both subtasks on November 4, 2026. T02-04/G2 remains Planned.
+
+## Approved T02-04 subtask (November 4, 2026)
+
+- [T02-04-01 Complete MCP verification and submit Stage 2 for review](T02-04-01.md) | Ready for review | Blocked by: T02-03 (Done)
+
+The owner approved this final Stage 2 verification slice. Its implementation and G2 are submitted for review; Stage 3 is not authorized by this approval.

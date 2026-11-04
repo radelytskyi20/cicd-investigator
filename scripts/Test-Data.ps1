@@ -7,7 +7,7 @@ if ($container.Count -ne 1) { throw 'Start the local Aspire stack first; expecte
 $port = (& docker port $container[0] 1433/tcp).Split(':')[-1]
 $env:INVESTIGATOR_TEST_SQL = "Server=127.0.0.1,$port;Database=investigator-smoke-t0201;User ID=sa;Password=$($secrets.'Parameters:sql-password');TrustServerCertificate=true"
 try {
-    & dotnet test tests/CiCdInvestigator.Data.Tests --verbosity minimal
+    & dotnet test tests/CiCdInvestigator.Data.Tests --verbosity minimal --filter "Category!=Mcp"
     if ($LASTEXITCODE -ne 0) { throw 'SQL dataset smoke failed.' }
 }
 finally { Remove-Item Env:INVESTIGATOR_TEST_SQL }

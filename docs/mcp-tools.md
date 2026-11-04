@@ -1,6 +1,6 @@
 # MCP tools
 
-Status: Implemented in T02-03 and accepted by the owner on November 4, 2026. Real protocol smoke passed against the Aspire-managed SQL-backed host. T02-04/G2 remains Planned.
+Status: Implemented in T02-03 and accepted by the owner on November 4, 2026. Real protocol smoke passed against the Aspire-managed SQL-backed host. T02-04/G2 is Ready for review.
 
 ## Transport and responses
 
@@ -33,4 +33,8 @@ Jobs are included in get_run; there is no duplicate get_jobs tool. find_baseline
 - find_baseline for run-102 returns run-101.
 - get_run for missing returns NotFound; a log count of 201 returns InvalidInput. A subsequent valid call succeeds.
 
-Run ./scripts/Test-Mcp.ps1 against the local Aspire stack. It uses the official C# client, discovers the exact catalog and calls every tool. It does not require Copilot or any AI budget. Dedicated test-database partial-source checks and final G2 evidence remain T02-04; this smoke does not claim those are complete.
+Run ./scripts/Test-Mcp.ps1 against the local Aspire stack. It uses the official C# client, discovers the exact catalog and calls every tool. It does not require Copilot or any AI budget. Dedicated test-database partial-source and attempt checks are provided by Test-McpIntegration in T02-04.
+
+## T02-04 isolated verification
+
+Test-McpIntegration starts the existing host executable on a temporary loopback port with investigator-mcp-test on the existing SQL container. It reuses the six-tool client, then runs one xUnit test. The test-only first attempt has sourceStatus Truncated with hasMore false for all stored lines and true for a one-line request. The second attempt has its own successful test and log. Wrong run/job/attempt combinations return NotFound. All identity fields are asserted. The script stops only its own host; normal Aspire resources and the demonstration dataset remain untouched. No evaluator answers are added to runtime fixtures.
