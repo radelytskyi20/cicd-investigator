@@ -1,6 +1,6 @@
 # Stage 3 verification review
 
-Status: Ready for review. Owner acceptance is pending. Scope: one local client, sequential investigations, existing Copilot login, compact reports and active-session context.
+Status: Done. Both T03-04 subtasks and the Stage 3 closeout were accepted by the owner on November 4, 2026. Scope: one local client, sequential investigations, existing Copilot login, compact reports and active-session context.
 
 ## Evidence reused from accepted tasks
 
@@ -44,4 +44,4 @@ Copilot SDK/CLI owns model turns, tool selection and continuation after tool res
 
 ## Remaining boundaries
 
-Browser UI and tab behavior through that UI, report Save/history, hard-crash cleanup, cancellation fallback under forced runtime failure, and repeated scenario evaluation are not claimed here. They are later scope or documented prototype limits. Stage 5 owns the three independent primary/negative evaluation runs. Stage 4 must not start until separately authorized. T03-04 and G3 are submitted as Ready for review. Only the owner can accept Done.
+Browser UI and tab behavior through that UI, report Save/history, hard-crash cleanup, cancellation fallback under forced runtime failure, and repeated scenario evaluation are not claimed here. They are later scope or documented prototype limits. Stage 5 owns the three independent primary/negative evaluation runs. Stage 4 must not start until separately authorized. T03-04 and G3 are accepted (Done) following owner acceptance of both closeout subtasks on November 4, 2026.

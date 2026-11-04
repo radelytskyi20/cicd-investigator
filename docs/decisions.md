@@ -89,3 +89,7 @@ The owner approved T03-04-01 and T03-04-02: add one focused substantive follow-u
 ## Stage 3 submission (November 4, 2026)
 
 The approved T03-04 slices are complete and Ready for review. A focused real follow-up exposed an uninspected-versus-unavailable wording error; a domain-instruction clarification and focused rerun resolved that observed issue. Accepted earlier tests were reused, with no new fake SDK layer or full-suite rerun. G3 is Ready for review, not Done. The evidence map and prototype boundaries are in stage-3-review.md; Stage 4 remains unstarted and unapproved.
+
+## Stage 3 owner acceptance (November 4, 2026)
+
+The owner accepted T03-04-01 and T03-04-02, completing parent T03-04 and G3 (Done). No Stage 3 implementation tasks remain. Recorded verification limits remain unchanged. Stage 4 requires a separately reviewed breakdown and execution approval.

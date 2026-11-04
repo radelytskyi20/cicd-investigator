@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Foundation, domain data/MCP, SDK sessions and compact report generation are implemented and accepted through T03-03. T03-04/G3 is Ready for review; see stage-3-review.md. UI and report persistence remain planned.
+Status: Foundation, domain data/MCP, SDK sessions and compact report generation are implemented and accepted through T03-04. T03-04/G3 is accepted (Done); see stage-3-review.md. UI and report persistence remain planned.
 
 ## Planned components
 

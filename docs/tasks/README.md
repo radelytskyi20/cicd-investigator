@@ -24,7 +24,7 @@ Example assignment: Implement T01-00 from this package. Prepare the repository i
 - Done: accepted by the owner.
 - Blocked: progress requires resolution of a recorded blocker.
 
-G1 is accepted by the owner; G2 is accepted (Done); G3 is Ready for review; G4-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
+G1 is accepted by the owner; G2 is accepted (Done); G3 is accepted (Done); G4-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
 
 
 ## Stage 1 Repository preparation environment and Aspire startup
@@ -52,7 +52,7 @@ G3: real SDK uses MCP tools, runs the agent loop, demonstrates session memory an
 - [T03-01 Validate Copilot SDK with the MCP server](T03-01.md) | Done | Depends on: [T02-04](T02-04.md)
 - [T03-02 Implement connection-scoped agent sessions](T03-02.md) | Done | Depends on: [T03-01](T03-01.md)
 - [T03-03 Implement investigation behavior and report validation](T03-03.md) | Done | Depends on: [T03-02](T03-02.md)
-- [T03-04 Verify agent loop memory and cancellation](T03-04.md) | Ready for review | Depends on: [T03-03](T03-03.md)
+- [T03-04 Verify agent loop memory and cancellation](T03-04.md) | Done | Depends on: [T03-03](T03-03.md)
 
 ## Stage 4 API and minimal user interface
 
@@ -141,7 +141,7 @@ Both compact-report slices are approved for execution. T03-04 was subsequently a
 
 Reuse accepted Stage 3 evidence; implement only the focused follow-up check and G3 review record.
 
-- [T03-04-01 Verify a meaningful follow-up using existing investigation context](T03-04-01.md) | Ready for review | Blocked by: T03-03 (Done)
-- [T03-04-02 Consolidate verification evidence and submit Stage 3 for acceptance](T03-04-02.md) | Ready for review | Blocked by: T03-04-01
+- [T03-04-01 Verify a meaningful follow-up using existing investigation context](T03-04-01.md) | Done | Blocked by: T03-03 (Done)
+- [T03-04-02 Consolidate verification evidence and submit Stage 3 for acceptance](T03-04-02.md) | Done | Blocked by: T03-04-01
 
-G3 evidence and remaining boundaries: [Stage 3 review](../stage-3-review.md). Owner acceptance is pending.
+G3 evidence and remaining boundaries: [Stage 3 review](../stage-3-review.md). Both T03-04 subtasks are accepted by the owner on November 4, 2026, completing T03-04 and G3. No Stage 3 implementation tasks remain. Stage 4 requires separate approval.
