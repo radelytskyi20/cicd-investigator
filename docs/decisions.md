@@ -30,8 +30,14 @@ S01 as primary and S04 as the negative demonstration are proposed defaults, not 
 
 ## Accepted foundation setup (November 4, 2026)
 
-The owner approved the five foundation slices linked from the task index. Preserve parent IDs T01-01 through T01-03. Use existing tools without unnecessary installation. SQL Server must publish configurable host port 14330 and must not bind host port 1433, which belongs to the owner's local SQL Server; keep container port 1433. The port mapping is planned, not yet implemented. Runtime and package baseline verification is recorded in development documentation.
+The owner approved the five foundation slices linked from the task index. Preserve parent IDs T01-01 through T01-03. Use existing tools without unnecessary installation. SQL Server must publish configurable host port 14330 and must not bind host port 1433, which belongs to the owner's local SQL Server; keep container port 1433. The port mapping is implemented and accepted with Foundation. Runtime and package baseline verification is recorded in development documentation.
 
 ## Execution authorization
 
 On November 4, 2026 the owner clarified that execution approval covers only the five foundation slices under T01-01 through T01-03. The earlier interpretation authorizing all Stage 1-5 work is superseded. Stage 2-3 implementation and local branches were withdrawn; Stage 2-5 remain Planned. Before implementing any later stage, break it into small reviewable tasks and obtain explicit owner approval. Preserve focused task branches, verification gates and owner acceptance of Done. See [archived research](research/deferred-stage-2-3.md) for historical observations, not current implementation.
+
+## Owner acceptance and prototype scope (November 4, 2026)
+
+The owner accepted all Foundation tasks previously Ready for review, completing G1, and approved the four T02-01 subtasks in the task index. This supersedes foundation-only authorization for T02-01 only; subsequent tasks still need approval.
+
+Build a minimal one-time local working prototype, not a deployed production service. Prefer simple EF operations. Do not invest in custom transaction orchestration, extensive durability testing, connection stress testing or broad protocol matrices. Keep relevant builds and minimal functional checks: a real SQL-backed data smoke and, when MCP tools exist, a minimal protocol-client smoke. Real SDK verification remains separate from fake adapters. Evidence identities and session boundaries remain required.

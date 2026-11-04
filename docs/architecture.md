@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Application shells implemented in T01-02; orchestration, domain data and agent behavior remain planned.
+Status: Application shells and Aspire orchestration are implemented and accepted. Domain data and agent behavior remain planned.
 
 ## Planned components
 
