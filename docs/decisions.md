@@ -64,4 +64,4 @@ The owner approved T03-01-01 and T03-01-02 and their execution. Reuse the instal
 
 ## T03-01 lifecycle outcome
 
-T03-01-01 was accepted by the owner on November 4, 2026. T03-01-02 verified real SDK cancellation, fresh-session isolation and normal disposal using the same installed CLI and login. Reuse CreateSessionAsync rather than ResumeSessionAsync. Retain the simple CLI-managed storage behavior approved above. T03-01-02 and its parent are Ready for review; this does not accept G3 or authorize T03-02.
+T03-01-01 was accepted by the owner on November 4, 2026. T03-01-02 verified real SDK cancellation, fresh-session isolation and normal disposal using the same installed CLI and login. Reuse CreateSessionAsync rather than ResumeSessionAsync. Retain the simple CLI-managed storage behavior approved above. The owner accepted T03-01-02 on November 4, 2026, completing both subtasks and parent T03-01 (Done). This does not accept G3 or authorize T03-02.
