@@ -34,4 +34,4 @@ The owner approved the five foundation slices linked from the task index. Preser
 
 ## Execution authorization
 
-On November 4, 2026 the owner approved sequential implementation of all current Stage 1-5 tasks without intermediate acceptance pauses. Keep focused task branches/commits, technical verification gates and truthful statuses. This does not authorize push, merge or marking unverified work Done. Stack branches on the preceding completed implementation without merging.
+On November 4, 2026 the owner clarified that execution approval covers only the five foundation slices under T01-01 through T01-03. The earlier interpretation authorizing all Stage 1-5 work is superseded. Stage 2-3 implementation and local branches were withdrawn; Stage 2-5 remain Planned. Before implementing any later stage, break it into small reviewable tasks and obtain explicit owner approval. Preserve focused task branches, verification gates and owner acceptance of Done. See [archived research](research/deferred-stage-2-3.md) for historical observations, not current implementation.

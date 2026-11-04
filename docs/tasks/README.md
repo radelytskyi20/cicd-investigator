@@ -24,7 +24,7 @@ Example assignment: Implement T01-00 from this package. Prepare the repository i
 - Done: accepted by the owner.
 - Blocked: progress requires resolution of a recorded blocker.
 
-All stage gates below are Planned and unverified. Dependencies form the listed sequence; each referenced predecessor must be accepted before its successor begins.
+G1 has recorded implementation checks and awaits owner acceptance; G2-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
 
 
 ## Stage 1 Repository preparation environment and Aspire startup
@@ -73,7 +73,7 @@ G5: primary and one negative case are evaluated three times each; fresh checkout
 
 ## Approved foundation subtasks (November 4, 2026)
 
-The owner approved these five slices, preserving the 19 parent task IDs. The owner subsequently authorized sequential execution of all Stage 1-5 tasks without intermediate acceptance pauses. Completed work remains Ready for review until accepted; technical gates still require actual checks.
+The owner clarified on November 4, 2026 that only these five foundation slices are approved for execution, preserving the 19 parent task IDs. The broader execution authorization is superseded. Stage 2-5 require a small-task breakdown and explicit owner approval before implementation. Deferred Stage 2-3 work was withdrawn; useful observations remain in [archived research](../research/deferred-stage-2-3.md). Completed foundation work remains Ready for review until accepted.
 
 - [T01-01-01 Verify prerequisites and pin compatible versions](T01-01-01.md) | Done | Blocked by: T01-00 (Done)
 - [T01-02-01 Build and launch the application shells](T01-02-01.md) | Ready for review | Blocked by: T01-01-01

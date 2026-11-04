@@ -96,3 +96,11 @@ The MCP /health check performs an EF Core connection to master until domain migr
 The named volume survives stop/restart. Aspire's stop command can return shortly before container cleanup finishes; wait for cleanup before restarting if a port remains occupied. The installed DCP emitted notification-socket warnings on Windows; resources and health checks still ran, so these warnings are recorded rather than mistaken for application success or failure.
 
 Use `./scripts/Stop-Local.ps1` for a stop that waits for SQL container shutdown before a restart. Immediate stop/start exposed a SQL instance-lock race; restarting the SQL resource after old container cleanup recovered it. Subsequent API/MCP health and frontend proxy requests all returned 200 with one SQL container and one MCP process. The named volume and stable password survived. G1 is submitted for review with this observed runtime limitation.
+
+## Foundation scope restored (November 4, 2026)
+
+At the owner's request the active code/history was returned to the five approved foundation slices at ac404ef. Stage 2-3 implementation branches, domain migrations/queries/tests and the SDK smoke were removed. Historical research is retained in [deferred-stage-2-3.md](research/deferred-stage-2-3.md); it is not current implementation or authorization to proceed.
+
+After removing stale generated .NET artifacts, the solution build passed with zero warnings/errors; the selected Node 24.22.1 frontend type check and production build passed. The project stack was stopped with Stop-Local and restarted through Aspire. SQL was healthy on the configured 14330 endpoint, API and MCP /health returned 200, and the frontend /api/status proxy returned ready. One project SQL container and one MCP process were observed. The deferred /mcp route returned 404 as expected for the shell.
+
+SQL volumes and local secrets were retained. The volume may still contain the earlier synthetic investigator database; the restored EF health check uses master and neither reads domain tables nor applies migrations. No Copilot analysis runs at startup. Foundation tasks retain their previous review statuses; later-stage tasks are Planned and require a new small-task breakdown and approval.
