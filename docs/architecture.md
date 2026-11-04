@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Application shells and Aspire orchestration are implemented and accepted. Initial domain data is implemented and Ready for review; agent behavior remains planned.
+Status: Application shells and Aspire orchestration are implemented and accepted. Initial domain data is implemented and accepted; agent behavior remains planned.
 
 ## Planned components
 
