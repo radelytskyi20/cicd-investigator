@@ -4,7 +4,7 @@ Status: Implemented in T02-03 and accepted by the owner on November 4, 2026. Rea
 
 ## Transport and responses
 
-One Aspire-owned ASP.NET Core host exposes Streamable HTTP at /mcp using official SDK 2.3.1 in stateless mode. /health remains separate. Aspire passes the full /mcp address as Mcp:Endpoint to API; no agent consumes it yet. Each tool call owns a fresh DI scope and EF context. No MCP conversation memory is stored.
+One Aspire-owned ASP.NET Core host exposes Streamable HTTP at /mcp using official SDK 2.3.1 in stateless mode. /health remains separate. Aspire passes the full /mcp address as Mcp:Endpoint to API; the T03-02 agent service consumes it. Each tool call owns a fresh DI scope and EF context. No MCP conversation memory is stored.
 
 Each tool returns JSON in an MCP text content block, using camelCase properties and named enums. The envelope is {"status":"Ok","data":...,"error":null}. Expected domain failures return status NotFound or InvalidInput with an explanation and null data. These are ordinary tool results; unexpected execution failures remain MCP execution errors. Successful reads retain sourceStatus values Complete, Empty, Unavailable, NotFound or Truncated; query success never implies source completeness.
 

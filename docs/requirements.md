@@ -79,3 +79,7 @@ Explain on screen: AppHost startup, MCP catalog and a real source, domain instru
 ### Local prototype clarification (November 4, 2026)
 
 CLI-managed runtime files are acceptable. No custom isolation or transcript cleanup is required. This does not authorize restoring previous conversations or adding application chat storage. Existing local Copilot authentication is reused without application-managed credentials.
+
+### Single-client execution scope (November 4, 2026)
+
+The approved local prototype supports one client and one current investigation application-wide. No simultaneous tabs or parallel investigations are required. When a response completes or Stop finishes, the user may explicitly send a follow-up or start a fresh investigation. A new investigation replaces the current SDK context; no separate close-investigation action is required. Disconnect and shutdown still cancel work and release that context. This supersedes earlier wording implying multiple isolated tab sessions, without adding resume or persistent application memory.

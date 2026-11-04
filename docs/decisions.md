@@ -65,3 +65,7 @@ The owner approved T03-01-01 and T03-01-02 and their execution. Reuse the instal
 ## T03-01 lifecycle outcome
 
 T03-01-01 was accepted by the owner on November 4, 2026. T03-01-02 verified real SDK cancellation, fresh-session isolation and normal disposal using the same installed CLI and login. Reuse CreateSessionAsync rather than ResumeSessionAsync. Retain the simple CLI-managed storage behavior approved above. The owner accepted T03-01-02 on November 4, 2026, completing both subtasks and parent T03-01 (Done). This does not accept G3 or authorize T03-02.
+
+## Approved single-client T03-02 scope (November 4, 2026)
+
+The owner approved T03-02-01 and T03-02-02 for implementation. This local prototype has one client and one current investigation application-wide. No multi-client session isolation or parallel investigations are required. After an answer or cancellation finishes, an explicit follow-up continues the conversation or Start replaces it with a fresh investigation. No separate close-investigation command is needed. Disconnect and shutdown still cancel work and release the current SDK session; ordinary CLI-managed files remain acceptable. This supersedes the earlier per-tab multi-session wording. T03-03 and later tasks remain unapproved.

@@ -10,9 +10,5 @@ if (args.Length == 4 && args[0] == "--copilot-smoke")
     return;
 }
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHealthChecks();
-var app = builder.Build();
-app.MapHealthChecks("/health");
-app.MapGet("/api/status", () => new { status = "ready", service = "CI/CD Investigator API" });
+var app = CiCdInvestigator.Api.ApiApplication.Build(args);
 await app.RunAsync();

@@ -6,6 +6,7 @@
     <Project Path="src/CiCdInvestigator.McpServer/CiCdInvestigator.McpServer.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/CiCdInvestigator.Agent.Smoke/CiCdInvestigator.Agent.Smoke.csproj" />
     <Project Path="tests/CiCdInvestigator.Data.Tests/CiCdInvestigator.Data.Tests.csproj" />
     <Project Path="tests/CiCdInvestigator.Mcp.Smoke/CiCdInvestigator.Mcp.Smoke.csproj" />
   </Folder>

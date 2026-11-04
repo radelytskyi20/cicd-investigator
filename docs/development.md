@@ -161,3 +161,21 @@ Verified November 4, 2026 with SDK 1.0.28, installed CLI 1.0.105 and gpt-5.4:
 - Both sessions and the client completed normal await-using disposal. A read-only Windows process observation identified copilot.exe PID 28404 as a direct child of smoke API PID 11484; after completion neither that child nor any direct children of the API remained. No unrelated process was stopped.
 
 The three-second observation is bounded evidence, not a guarantee about arbitrary network failures. Browser disconnect, SignalR, host shutdown and hard crashes remain later lifecycle work. The check does not prove cancellation of an already dispatched HTTP request inside the MCP host. SDK disposal closes in-memory sessions but CLI-managed disk files can remain; no custom cleanup, global settings changes, transcript persistence in the application or automatic resume was added.
+
+## T03-02 single-client SignalR verification
+
+Build with `dotnet build CiCdInvestigator.slnx -c Release --verbosity minimal`, then run `./scripts/Test-Agent.ps1` with the Aspire MCP host healthy. The new smoke uses the pinned official Microsoft.AspNetCore.SignalR.Client 10.0.14 and hosts the same API on an ephemeral loopback address. It connects to the existing SQL-backed MCP and uses the real SDK/CLI and current login. No frontend or fake AI adapter is involved. The API can also run normally under Aspire; it receives Mcp:Endpoint and resolves Copilot:CliPath (default copilot on PATH) and Copilot:Model (default gpt-5.4). The smoke explicitly supplies the installed executable path.
+
+Verified on November 4, 2026:
+
+- Full Release solution build passed with zero warnings/errors. The final changed smoke project rebuilt with zero warnings/errors.
+- Real SignalR start returned the MCP-backed revision. A follow-up recalled both a random user marker and the prior tool result without new tool calls. A subsequent Start did not inherit that marker.
+- A missing session reported an error. An overlapping request was rejected; the expected HubException is logged by SignalR. No investigation queue was added.
+- Stop reached SDK idle in 28 ms, returned cancelled without an answer, and emitted no further events in a one-second observation. Idle Stop was harmless; a later explicit follow-up retained the conversation.
+- Graceful disconnect cancelled in 38 ms and cleared the session. Disconnect/reconnect verification completed in 1544 ms, including a deliberate 1500 ms observation wait; this is not an isolated browser detection-latency measurement.
+- Abrupt WebSocket abort cancelled in 12 ms and cleared the session; reconnect was explicit and FollowUp required a new Start.
+- Host shutdown during active work cancelled in 19 ms and completed normal session/client disposal. A subsequent Windows process query found no children of the smoke process (PID 16312). No unrelated process was stopped.
+
+During development, the first smoke treated the expected shutdown WebSocket exception as a failure. Another run attempted reconnect before CLI disposal finished; its checker waited for an event from a rejected invocation. The checker now handles expected transport closure and bounds its wait for cleanup; the final full smoke passed. A build attempted while that earlier checker held its executable open failed with a Windows file-lock error; after stopping that owned checker, the build passed.
+
+Limitations: no browser/UI, hard-crash cleanup, network partition timing, general report validation or G3 acceptance is claimed. These are local real-integration checks, not the repeated scenario evaluation in T05-02. The cancellation fallback was not forced. SDK files remain CLI-managed as approved.

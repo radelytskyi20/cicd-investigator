@@ -51,3 +51,9 @@ The API executable has an explicit --copilot-smoke mode, invoked by scripts/Test
 ## Verified SDK lifecycle experiment (T03-01-02)
 
 The API's explicit --copilot-lifecycle-smoke mode verifies same-session recall, abort after a real tool-start event, idle and a three-second no-further-work observation, then a distinct fresh SDK session without the previous marker. Sessions and client use ordinary await-using disposal. Installed CLI child-process exit was observed separately. This is a local SDK integration check, not a connection-scoped agent service; SignalR and browser disconnect behavior remain T03-02.
+
+## Implemented single-client agent service (T03-02)
+
+ApiApplication builds the same API used by normal startup and the real SignalR integration smoke. InvestigationHub forwards Start/FollowUp/Stop to one InvestigationAgentService singleton. The service holds one SDK conversation and serializes turns with a single gate; no per-client dictionary, provider layer or second model loop exists. A new Start after completion creates fresh context; FollowUp retains the current SDK context. Six existing read-only MCP tools are explicitly allowed. A turn-local channel forwards actual SDK events to SignalR and is drained or cancelled within the awaited request; it is not a background investigation queue.
+
+Stop cancels the current turn while retaining the conversation. Disconnect and application shutdown cancel and dispose it. The one-client scope supersedes the earlier planned per-tab session wording. UI, validated reports and saved history remain later tasks.
