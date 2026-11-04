@@ -7,6 +7,12 @@ public static class InitialDataset
     public static async Task InitializeAsync(InvestigatorContext database, CancellationToken cancellationToken = default)
     {
         await database.Database.MigrateAsync(cancellationToken);
+        await SeedPricingAsync(database, cancellationToken);
+        await AdditionalDataset.InitializeAsync(database, cancellationToken);
+    }
+
+    private static async Task SeedPricingAsync(InvestigatorContext database, CancellationToken cancellationToken)
+    {
         if (await database.Runs.AnyAsync(x => x.Id == "run-102", cancellationToken)) return;
 
         database.Pipelines.Add(new Pipeline { Id = "pricing-ci", Name = "Pricing CI", Repository = "mock/pricing" });

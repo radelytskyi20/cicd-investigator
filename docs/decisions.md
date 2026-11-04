@@ -1,5 +1,9 @@
 # Implementation decisions
 
+## Approved small dataset expansion (November 4, 2026)
+
+The owner authorized a 15-minute addition of a few simple investigable runs. T05-01 is limited to adding S02 (restore failure with a successful predecessor) and S04 (insufficient data), preserving S01 and saved reports. Use the existing schema and agent behavior. Verify seed/query behavior and one real investigation per new failure; this does not authorize or complete the full S01–S09 catalog or T05-02 repeated evaluation.
+
 ## Approved Stage 4 demo reduction (November 4, 2026)
 
 The owner authorized the reduced Stage 4 as one sequential delivery for a working local demo by 15:30 Europe/Budapest. This supersedes the earlier requirement for separate Stage 4 execution approvals and the broader original task acceptance scope.

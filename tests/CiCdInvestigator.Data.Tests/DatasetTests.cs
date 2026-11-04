@@ -20,10 +20,10 @@ public sealed class DatasetTests
         await using (var database = new InvestigatorContext(options))
         {
             await InitialDataset.InitializeAsync(database);
-            Assert.Equal(2, await database.Runs.CountAsync());
-            Assert.Equal(2, await database.Jobs.CountAsync());
-            Assert.Equal(6, await database.Logs.CountAsync());
-            Assert.Equal(2, await database.Tests.CountAsync());
+            Assert.Equal(5, await database.Runs.CountAsync());
+            Assert.Equal(7, await database.Jobs.CountAsync());
+            Assert.Equal(14, await database.Logs.CountAsync());
+            Assert.Equal(3, await database.Tests.CountAsync());
             var runs = await database.Runs.OrderBy(x => x.StartedAt).ToListAsync();
             Assert.Equal(Outcome.Succeeded, runs[0].Outcome);
             Assert.Equal(Outcome.Failed, runs[1].Outcome);
@@ -70,6 +70,7 @@ public sealed class DatasetTests
         var options = new DbContextOptionsBuilder<InvestigatorContext>().UseSqlServer(connection).Options;
         await using var database = new InvestigatorContext(options);
         await InitialDataset.InitializeAsync(database);
+        database.ChangeTracker.Clear();
         var queries = new InvestigationQueries(database);
         var runs = await queries.ListRunsAsync("pricing-ci", "refs/heads/main", Outcome.Failed);
         Assert.Equal("run-102", Assert.Single(runs.Data!).Id);
@@ -101,6 +102,16 @@ public sealed class DatasetTests
         Assert.Null((await queries.FindBaselineAsync("run-101")).Data!.Candidate);
         Assert.Equal(QueryStatus.NotFound, (await queries.FindBaselineAsync("absent")).Status);
         Assert.Empty(database.ChangeTracker.Entries());
+
+        var restore = (await queries.GetRunAsync("run-202")).Data!;
+        Assert.Equal(Outcome.Skipped, restore.Jobs.Single(job => job.Name == "test").Outcome);
+        Assert.Equal("run-201", (await queries.FindBaselineAsync("run-202")).Data!.Candidate!.Id);
+        Assert.Equal(SourceStatus.Empty, (await queries.GetChangesAsync("run-202")).Data!.SourceStatus);
+        Assert.Empty((await queries.GetTestsAsync("run-202", "job-202-test-1", 1)).Data!.Tests);
+        Assert.Contains((await queries.ReadLogAsync("run-202", "job-202-restore-1", 1)).Data!.Lines, line => line.Text.Contains("NU1101"));
+        Assert.Null((await queries.FindBaselineAsync("run-301")).Data!.Candidate);
+        Assert.Equal(SourceStatus.Truncated, (await queries.ReadLogAsync("run-301", "job-301-smoke-1", 1)).Data!.SourceStatus);
+        Assert.Equal(SourceStatus.Unavailable, (await queries.GetTestsAsync("run-301", "job-301-smoke-1", 1)).Data!.SourceStatus);
 
         // Test-local variations roll back; the demonstration fixture remains unchanged.
         await using var transaction = await database.Database.BeginTransactionAsync();

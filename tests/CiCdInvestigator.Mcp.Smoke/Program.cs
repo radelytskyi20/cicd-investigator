@@ -24,7 +24,7 @@ void Check(bool condition, string message)
 {
     if (!condition) throw new InvalidOperationException(message);
 }
-var runs = await Call("list_runs", new() { ["outcome"] = "Failed" });
+var runs = await Call("list_runs", new() { ["outcome"] = "Failed", ["reference"] = "refs/heads/main" });
 Check(runs.GetProperty("status").GetString() == "Ok" && runs.GetProperty("data")[0].GetProperty("id").GetString() == "run-102", "Run listing failed.");
 var run = await Call("get_run", new() { ["runId"] = "run-102" });
 Check(run.GetProperty("data").GetProperty("jobs")[0].GetProperty("attempt").GetInt32() == 1, "Job identity missing.");

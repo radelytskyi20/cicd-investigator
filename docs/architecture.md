@@ -14,6 +14,10 @@ API references the existing Data library and exposes its concrete queries throug
 
 Saved report opening is a read-only history operation and does not recreate the conversation. Source links carry original identity and dataset version. An unavailable version is labelled, without storing full source archives. Filters, revisions, full chat transcript UI, manual baseline UI and broader Stage 5 scenarios remain deferred.
 
+## Small dataset extension
+
+InitialDataset now always invokes AdditionalDataset after ensuring the original S01 seed exists. This also upgrades existing demo databases: run-201/run-202 add a restore scenario on refs/heads/package-restore, and run-301 adds an incomplete smoke failure on refs/heads/nightly-smoke. Existing run IDs, source rows and mock-v1 quotations remain unchanged; new rows use mock-extra-v1. Ordinary EF SaveChanges makes each addition atomic, and existing scenario markers prevent duplicates on repeated startup. No migration, report deletion or extra MCP tool was needed. A real S04 check also prompted a generic instruction clarification: supported refers to a causal explanation, not merely a confirmed Failed status. The catalog now contains five runs, of which three are failed investigation targets.
+
 ## Planned data flow
 
 The UI reads catalog and source data through the API. The Investigator reads CI/CD facts through read-only MCP tools. Copilot CLI owns the agent loop; the application owns domain instructions, tool access, evidence validation and connection lifecycle. The API saves explicitly requested, validated completed reports.

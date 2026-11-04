@@ -6,7 +6,7 @@ $api = @($description.resources | Where-Object { $_.name -like 'api-*' })
 if ($api.Count -ne 1 -or $api[0].healthStatus -ne 'Healthy') { throw 'Expected one healthy API.' }
 $url = ($api[0].urls | Where-Object name -eq 'http').url
 $runs = (Invoke-RestMethod "$url/api/runs").data
-if ($runs.Count -lt 2 -or $runs[0].id -ne 'run-102') { throw 'Expected the S01 run catalog in descending time order.' }
+if ($runs.Count -lt 2 -or 'run-102' -notin $runs.id -or 'run-101' -notin $runs.id) { throw 'Expected the S01 runs in the catalog.' }
 $run = (Invoke-RestMethod "$url/api/runs/run-102").data
 if ($run.jobs[0].id -ne 'job-102-test-1') { throw 'Run/job identity mismatch.' }
 $baseline = (Invoke-RestMethod "$url/api/runs/run-102/baseline").data

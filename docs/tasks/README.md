@@ -76,7 +76,7 @@ The owner approved the complete reduced Stage 4 delivery. Saved-report revisions
 
 G5: primary and one negative case are evaluated three times each; fresh checkout and demo are reproducible.
 
-- [T05-01 Finalize the compact S01 to S09 mock dataset](T05-01.md) | Planned | Depends on: [T04-04](T04-04.md)
+- [T05-01 Add a small investigable demo dataset](T05-01.md) | Ready for review (reduced scope) | Depends on: [T04-04](T04-04.md)
 - [T05-02 Evaluate the agent and prepare the memory demonstration](T05-02.md) | Planned | Depends on: [T05-01](T05-01.md)
 - [T05-03 Finalize reproducible startup and MVP documentation](T05-03.md) | Planned | Depends on: [T05-02](T05-02.md)
 
@@ -127,7 +127,7 @@ The owner approved this final Stage 2 verification slice. Its implementation and
 
 ## Approved T03-01 subtasks (November 4, 2026)
 
-The owner approved both slices and execution with the existing local Copilot login. T03-02 was subsequently approved and accepted; T03-03 was subsequently approved; T03-04 was subsequently approved; Reduced Stage 4 was subsequently approved; Stage 5 remains unapproved.
+The owner approved both slices and execution with the existing local Copilot login. T03-02 was subsequently approved and accepted; T03-03 was subsequently approved; T03-04 was subsequently approved; Reduced Stage 4 was subsequently approved; A small T05-01 dataset expansion was subsequently approved; full Stage 5 remains deferred.
 
 - [T03-01-01 Connect Copilot SDK to MCP using the existing local login](T03-01-01.md) | Done | Blocked by: T02-04 (Done)
 - [T03-01-02 Verify cancellation and fresh-session behavior](T03-01-02.md) | Done | Blocked by: T03-01-01
@@ -141,7 +141,7 @@ Single-client, sequential prototype scope; both slices approved for execution. T
 
 ## Approved T03-03 subtasks (November 4, 2026)
 
-Both compact-report slices are approved for execution. T03-04 was subsequently approved; Reduced Stage 4 was subsequently approved; Stage 5 remains unapproved.
+Both compact-report slices are approved for execution. T03-04 was subsequently approved; Reduced Stage 4 was subsequently approved; A small T05-01 dataset expansion was subsequently approved; full Stage 5 remains deferred.
 
 - [T03-03-01 Produce an evidence-validated investigation report for S01](T03-03-01.md) | Done | Blocked by: T03-02 (Done)
 - [T03-03-02 Handle insufficient evidence and invalid reports](T03-03-02.md) | Done | Blocked by: T03-03-01
@@ -154,3 +154,4 @@ Reuse accepted Stage 3 evidence; implement only the focused follow-up check and 
 - [T03-04-02 Consolidate verification evidence and submit Stage 3 for acceptance](T03-04-02.md) | Done | Blocked by: T03-04-01
 
 G3 evidence and remaining boundaries: [Stage 3 review](../stage-3-review.md). Both T03-04 subtasks are accepted by the owner on November 4, 2026, completing T03-04 and G3. No Stage 3 implementation tasks remain. The reduced Stage 4 was subsequently approved and is Ready for review; see stage-4-review.md.
+

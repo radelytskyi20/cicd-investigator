@@ -28,4 +28,13 @@ Start through `scripts/Start-Local.ps1` with the pinned Node executable as docum
 
 The UI displays the actual error. A validation failure can be addressed with an explicit follow-up asking for a corrected compact report using observed sources. There is no automatic retry or reconnect. Start fresh investigation if the SDK session has ended. A failed Save does not show Saved; retry only while the completed result remains available in the open session.
 
-Only S01 is in the ordinary dataset. Negative-case demonstration, the full S01–S09 catalog and three-run scenario evaluations remain Stage 5 work. See [Stage 4 review](stage-4-review.md) for actual results and limits.
+## Additional simple runs
+
+The approved small dataset expansion adds these choices to the same UI:
+
+| Run | Scenario |
+| --- | --- |
+| run-202 | Restore failure before tests; successful baseline run-201 |
+| run-301 | Failed smoke job with incomplete source data and no baseline |
+
+Select either failed run and use the default investigation goal. The original run-102/run-101 pair remains unchanged. Catalog cards show the ref to help distinguish scenarios. This is a small S01/S02/S04 dataset, not the full S01–S09 catalog or repeated T05-02 evaluation.
