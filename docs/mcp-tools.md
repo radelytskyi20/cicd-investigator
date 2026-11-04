@@ -1,6 +1,6 @@
 # MCP tools
 
-Status: Implemented in T02-03 and accepted by the owner on November 4, 2026. Real protocol smoke passed against the Aspire-managed SQL-backed host. T02-04/G2 is Ready for review.
+Status: Implemented in T02-03 and accepted by the owner on November 4, 2026. Real protocol smoke passed against the Aspire-managed SQL-backed host. T02-04/G2 is accepted (Done).
 
 ## Transport and responses
 
