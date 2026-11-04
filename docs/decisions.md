@@ -69,3 +69,7 @@ T03-01-01 was accepted by the owner on November 4, 2026. T03-01-02 verified real
 ## Approved single-client T03-02 scope (November 4, 2026)
 
 The owner approved T03-02-01 and T03-02-02 for implementation. This local prototype has one client and one current investigation application-wide. No multi-client session isolation or parallel investigations are required. After an answer or cancellation finishes, an explicit follow-up continues the conversation or Start replaces it with a fresh investigation. No separate close-investigation command is needed. Disconnect and shutdown still cancel work and release the current SDK session; ordinary CLI-managed files remain acceptable. This supersedes the earlier per-tab multi-session wording. T03-03 and later tasks remain unapproved.
+
+## T03-02 owner acceptance (November 4, 2026)
+
+The owner accepted T03-02-01 and T03-02-02, completing parent T03-02 (Done). T03-03 and T03-04 remain Planned and require separate scope approval. G3 is not yet accepted.

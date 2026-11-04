@@ -1,6 +1,6 @@
 # API contracts
 
-Status: SignalR investigation transport is implemented in T03-02 and Ready for review. Catalog REST APIs and completed-report storage remain planned.
+Status: SignalR investigation transport is implemented in T03-02 and accepted (Done). Catalog REST APIs and completed-report storage remain planned.
 
 ## Planned read APIs
 
