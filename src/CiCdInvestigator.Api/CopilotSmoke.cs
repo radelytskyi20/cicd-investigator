@@ -13,20 +13,7 @@ internal static class CopilotSmoke
             Mode = CopilotClientMode.CopilotCli,
             UseLoggedInUser = true
         });
-        await using var session = await client.CreateSessionAsync(new SessionConfig
-        {
-            Model = model,
-            AvailableTools = ["mcp:cicd-get_run"],
-            EnableSessionStore = false,
-            EnableConfigDiscovery = false,
-            EnableSkills = false,
-            Memory = new MemoryConfiguration { Enabled = false },
-            OnPermissionRequest = PermissionHandler.ApproveAll,
-            McpServers = new Dictionary<string, McpServerConfig>
-            {
-                ["cicd"] = new McpHttpServerConfig { Url = endpoint, Tools = ["get_run"] }
-            }
-        });
+        await using var session = await client.CreateSessionAsync(CreateSessionConfig(endpoint, model));
         bool toolStarted = false;
         bool toolCompleted = false;
         bool idle = false;
@@ -59,4 +46,19 @@ internal static class CopilotSmoke
         }
         Console.WriteLine("PASS: real MCP call, source payload, final answer and session.idle observed.");
     }
+    internal static SessionConfig CreateSessionConfig(string endpoint, string model) =>
+        new SessionConfig
+        {
+            Model = model,
+            AvailableTools = ["mcp:cicd-get_run"],
+            EnableSessionStore = false,
+            EnableConfigDiscovery = false,
+            EnableSkills = false,
+            Memory = new MemoryConfiguration { Enabled = false },
+            OnPermissionRequest = PermissionHandler.ApproveAll,
+            McpServers = new Dictionary<string, McpServerConfig>
+            {
+                ["cicd"] = new McpHttpServerConfig { Url = endpoint, Tools = ["get_run"] }
+            }
+        };
 }

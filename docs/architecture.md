@@ -47,3 +47,7 @@ The existing host exposes /mcp using official SDK 2.3.1, with stateless Streamab
 ## Implemented SDK experiment (T03-01-01)
 
 The API executable has an explicit --copilot-smoke mode, invoked by scripts/Test-Copilot.ps1 against the existing Aspire MCP host. Ordinary API startup remains unchanged. GitHub.Copilot.SDK 1.0.28 uses the installed CLI 1.0.105 and existing login. A fresh session exposes only get_run, records tool events/source payload availability, and verifies a final answer and idle event. No agent service, hub or report persistence is implemented. Runtime files use ordinary CLI behavior; custom storage cleanup is out of scope.
+
+## Verified SDK lifecycle experiment (T03-01-02)
+
+The API's explicit --copilot-lifecycle-smoke mode verifies same-session recall, abort after a real tool-start event, idle and a three-second no-further-work observation, then a distinct fresh SDK session without the previous marker. Sessions and client use ordinary await-using disposal. Installed CLI child-process exit was observed separately. This is a local SDK integration check, not a connection-scoped agent service; SignalR and browser disconnect behavior remain T03-02.

@@ -148,3 +148,16 @@ Build the API with `dotnet build src/CiCdInvestigator.Api -c Release --verbosity
 SDK 1.0.28 with installed CLI 1.0.105 reused the existing login directly in CopilotCli mode. No token copying, login flow, custom home directory or runtime download was needed. AvailableTools permits only mcp:cicd-get_run; the MCP configuration permits only get_run. Config discovery and skills are disabled so repository developer instructions do not become investigator instructions. Cross-session store and persistent memory are disabled; ordinary CLI files remain acceptable.
 
 Actual run: cicd-get_run returned source data for run-102; the final answer reported failed at revision-102. ToolExecutionStartEvent exposes name/call identity, ToolExecutionCompleteEvent.Data.Result exposes source data, and SessionIdleEvent plus SendAndWaitAsync indicate completion. The smoke checks the known fixture identity/revision and failed outcome; this is not general report validation. The two-minute wait is a smoke timeout, not an application work budget or proof of cancellation. Explicit cancellation and fresh-session checks belong to T03-01-02.
+
+## T03-01-02 lifecycle verification
+
+Run `./scripts/Test-Copilot.ps1 -Lifecycle` after the same API Release build, with the Aspire MCP host healthy. This uses real SDK/CLI calls and the existing login, not a fake adapter. The minimal experiment remains inside the API executable; ordinary startup does not run it.
+
+Verified November 4, 2026 with SDK 1.0.28, installed CLI 1.0.105 and gpt-5.4:
+
+- A random marker was recalled in the same SDK session without repeating it in the follow-up.
+- Cancellation was requested after the first real tool-start event, while a multi-read turn was active. AbortAsync reached session.idle in 45 ms. The observed tool-start count stayed at one and no new assistant messages arrived during the subsequent three-second observation.
+- After disposing that session, CreateSessionAsync produced a different session ID. Its event history contained no prior marker and the model answered UNKNOWN when asked for it without supplying it.
+- Both sessions and the client completed normal await-using disposal. A read-only Windows process observation identified copilot.exe PID 28404 as a direct child of smoke API PID 11484; after completion neither that child nor any direct children of the API remained. No unrelated process was stopped.
+
+The three-second observation is bounded evidence, not a guarantee about arbitrary network failures. Browser disconnect, SignalR, host shutdown and hard crashes remain later lifecycle work. The check does not prove cancellation of an already dispatched HTTP request inside the MCP host. SDK disposal closes in-memory sessions but CLI-managed disk files can remain; no custom cleanup, global settings changes, transcript persistence in the application or automatic resume was added.
