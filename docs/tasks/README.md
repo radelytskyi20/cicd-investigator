@@ -154,4 +154,3 @@ Reuse accepted Stage 3 evidence; implement only the focused follow-up check and 
 - [T03-04-02 Consolidate verification evidence and submit Stage 3 for acceptance](T03-04-02.md) | Done | Blocked by: T03-04-01
 
 G3 evidence and remaining boundaries: [Stage 3 review](../stage-3-review.md). Both T03-04 subtasks are accepted by the owner on November 4, 2026, completing T03-04 and G3. No Stage 3 implementation tasks remain. The reduced Stage 4 was subsequently approved and is Ready for review; see stage-4-review.md.
-
