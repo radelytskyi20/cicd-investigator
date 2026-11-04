@@ -49,3 +49,7 @@ MCP owns migration and seed before readiness. The investigator Aspire resource m
 ## T02-02 approved prototype scope (November 4, 2026)
 
 The owner approved the four T02-02 slices and implementation. Simplicity is required wherever the demonstration allows it. Use a single concrete EF query service and small result records; no new architecture layers. Read log ranges only (1-200 lines). Select the nearest eligible baseline by strictly earlier StartedAt, breaking timestamp ties by ID. Compare available environment/SDK text without a parser, configuration and job names; unknown values remain limitations. Keep a noncomparable candidate visible instead of implementing fallback scoring. Stored changes retain their own base revision. T02-03 and later work still require approval.
+
+## T02-03 approval and implementation
+
+On November 4, 2026 the owner accepted T02-02 and all four subtasks and authorized T02-03-01 and T02-03-02. The minimal catalog contains six tools: jobs are included in get_run and find_baseline returns a single qualified candidate. Use stateless Streamable HTTP with one Aspire-owned process, per-call EF scope and JSON text results with explicit domain statuses. No AI integration or T02-04 acceptance is implied.

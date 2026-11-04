@@ -18,7 +18,7 @@ var mcp = builder.AddProject<Projects.CiCdInvestigator_McpServer>("mcp")
     .WithReference(database).WaitFor(sql);
 var api = builder.AddProject<Projects.CiCdInvestigator_Api>("api")
     .WithHttpEndpoint().WithHttpHealthCheck("/health")
-    .WithReference(database).WithEnvironment("Mcp:Endpoint", mcp.GetEndpoint("http"))
+    .WithReference(database).WithEnvironment("Mcp:Endpoint", ReferenceExpression.Create($"{mcp.GetEndpoint("http")}/mcp"))
     .WaitFor(sql).WaitFor(mcp);
 builder.AddNodeApp("web", "../cicd-investigator-web", "node_modules/vite/bin/vite.js")
     .WithHttpEndpoint(env: "PORT")

@@ -1,4 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
-  <ItemGroup><ProjectReference Include="../CiCdInvestigator.Data/CiCdInvestigator.Data.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../CiCdInvestigator.Data/CiCdInvestigator.Data.csproj" /><PackageReference Include="ModelContextProtocol.AspNetCore" /></ItemGroup>
 </Project>

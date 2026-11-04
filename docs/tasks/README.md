@@ -41,8 +41,8 @@ G1: Codex-ready repository and verified environment; AppHost starts SQL, API, MC
 G2: MCP protocol tests pass independently of the model against SQL Server.
 
 - [T02-01 Create the EF model and initial mock data](T02-01.md) | Done | Depends on: [T01-03](T01-03.md)
-- [T02-02 Implement domain queries and baseline selection](T02-02.md) | Ready for review | Depends on: [T02-01](T02-01.md)
-- [T02-03 Expose the MCP server tools](T02-03.md) | Planned | Depends on: [T02-02](T02-02.md)
+- [T02-02 Implement domain queries and baseline selection](T02-02.md) | Done | Depends on: [T02-01](T02-01.md)
+- [T02-03 Expose the MCP server tools](T02-03.md) | Ready for review | Depends on: [T02-02](T02-02.md)
 - [T02-04 Verify MCP independently of the model](T02-04.md) | Planned | Depends on: [T02-03](T02-03.md)
 
 ## Stage 3 Copilot SDK agent and session memory
@@ -93,9 +93,17 @@ Implemented and accepted by the owner on November 4, 2026. Later tasks still req
 
 ## Approved T02-02 subtasks (November 4, 2026)
 
-Owner-approved minimal prototype scope; implemented and awaiting review. T02-03 and subsequent tasks are not authorized by this approval.
+Owner-approved minimal prototype scope; implemented and accepted on November 4, 2026. T02-03-01 and T02-03-02 were subsequently approved; T02-04 remains Planned.
 
-- [T02-02-01 Browse runs and inspect execution details](T02-02-01.md) | Ready for review | Blocked by: T02-01 (Done)
-- [T02-02-02 Read bounded logs and test evidence](T02-02-02.md) | Ready for review | Blocked by: T02-02-01
-- [T02-02-03 Read commits and available changes](T02-02-03.md) | Ready for review | Blocked by: T02-02-01
-- [T02-02-04 Select a baseline and explain comparison limits](T02-02-04.md) | Ready for review | Blocked by: T02-02-01
+- [T02-02-01 Browse runs and inspect execution details](T02-02-01.md) | Done | Blocked by: T02-01 (Done)
+- [T02-02-02 Read bounded logs and test evidence](T02-02-02.md) | Done | Blocked by: T02-02-01
+- [T02-02-03 Read commits and available changes](T02-02-03.md) | Done | Blocked by: T02-02-01
+- [T02-02-04 Select a baseline and explain comparison limits](T02-02-04.md) | Done | Blocked by: T02-02-01
+
+
+## Approved T02-03 subtasks (November 4, 2026)
+
+The owner accepted T02-02 and approved these two minimal MCP slices. T02-04 is not included in this execution approval.
+
+- [T02-03-01 Discover and inspect runs through MCP](T02-03-01.md) | Ready for review | Blocked by: T02-02 (Done)
+- [T02-03-02 Read investigation evidence through MCP](T02-03-02.md) | Ready for review | Blocked by: T02-03-01

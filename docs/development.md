@@ -120,3 +120,10 @@ Verified T02-01 results: solution build passed with zero warnings/errors after s
 Run `./scripts/Test-Data.ps1` with the local Aspire SQL container running. Both tests passed: the original data smoke and the query smoke. Coverage includes filtered S01 reads, unknown/invalid inputs, job-attempt isolation, bounded and source-truncated logs, missing tests, stored diff scope, empty versus unavailable changes, absent baseline and qualified noncomparable baseline. Edge-case changes are test-local and rolled back; no extra demonstration scenarios were seeded. No MCP protocol, SDK or new browser verification is claimed.
 
 The full solution build passed with zero warnings/errors after stopping the running stack to release binaries. Aspire was started again afterward. git diff --check passed.
+
+## T02-03 protocol smoke
+
+Run ./scripts/Test-Mcp.ps1 with one healthy Aspire MCP host. The script discovers its HTTP URL, appends /mcp and runs the console smoke using ModelContextProtocol.Core 2.3.1. No SQL credentials or AI calls are needed by the client. The solution build passed with zero warnings/errors. The real client discovered exactly six tools and called all of them; it checked S01 evidence/baseline and distinct unknown-ID, invalid-range and unavailable-source results. T02-04 partial-source verification on a dedicated database remains Planned.
+
+
+After one full Aspire stop/start, all resources became Healthy and the same protocol smoke passed again. One MCP process was observed. An immediate smoke attempt before readiness correctly refused to run; it passed once the host was Healthy.
