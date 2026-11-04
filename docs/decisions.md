@@ -81,3 +81,11 @@ The owner approved T03-03-01 and T03-03-02. Reports must remain a few short para
 ## T03-03 owner acceptance (November 4, 2026)
 
 The owner accepted T03-03-01 and T03-03-02, completing parent T03-03 (Done). T03-04 remains Planned and is the remaining Stage 3 task. G3 is not yet accepted; its verification scope requires separate approval.
+
+## Approved Stage 3 closeout scope (November 4, 2026)
+
+The owner approved T03-04-01 and T03-04-02: add one focused substantive follow-up check and consolidate G3 evidence. Reuse accepted T03-01 through T03-03 results rather than rerun the full suite or introduce a fake SDK layer merely to close the stage. This supersedes the earlier broader deterministic-lifecycle testing plan in T03-04. Rerun checks only when a relevant change or unresolved concern justifies it. G3 acceptance remains the owner's decision; Stage 4 is not authorized.
+
+## Stage 3 submission (November 4, 2026)
+
+The approved T03-04 slices are complete and Ready for review. A focused real follow-up exposed an uninspected-versus-unavailable wording error; a domain-instruction clarification and focused rerun resolved that observed issue. Accepted earlier tests were reused, with no new fake SDK layer or full-suite rerun. G3 is Ready for review, not Done. The evidence map and prototype boundaries are in stage-3-review.md; Stage 4 remains unstarted and unapproved.

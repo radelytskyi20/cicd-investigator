@@ -6,13 +6,13 @@ Status: SignalR investigation transport is implemented in T03-02 and accepted (D
 
 T04-01 will document catalog filters, run/job/log/test/change/baseline reads, source identity, completeness and distinct error responses. User-facing reads must not replace the Investigator's MCP access.
 
-## Planned session transport
+## Implemented session transport
 
 SignalR implements start, follow-up, Stop and actual progress/tool events. The implemented T03-02 contract is recorded below. Automatic reconnect and session resume are excluded.
 
 ## Planned completed-report storage
 
-T03-03 will define validated report output. T04-01 will define ready-result identity, explicit idempotent Save, revisions, report history and write failures. No transient conversation or interrupted draft is saved. See [requirements](requirements.md).
+T03-03 defines validated report output. T04-01 will define ready-result identity, explicit idempotent Save, revisions, report history and write failures. No transient conversation or interrupted draft is saved. See [requirements](requirements.md).
 
 ## Implemented single-client investigation transport (T03-02)
 
@@ -20,7 +20,7 @@ The local API exposes SignalR at `/investigation`. One singleton service owns on
 
 ### Client methods
 
-- `Start({ runId, goal, baselineId? })`: after the previous turn ends, disposes the previous conversation/runtime and creates a fresh SDK conversation. Run and goal must be nonblank. Baseline is optional context, not a validated baseline selection in this task.
+- `Start({ runId, goal, baselineId? })`: after the previous turn ends, disposes the previous conversation/runtime and creates a fresh SDK conversation. Run and goal must be nonblank. Baseline is optional; T03-03 checks a supplied baseline against observed source data before answerReady.
 - `FollowUp(message)`: sends a nonblank message to the current conversation. A missing conversation produces an error. Earlier messages and tool results remain available in the SDK session.
 - `Stop()`: cancels the active turn and waits for cancellation processing; idle Stop is harmless. The current conversation remains available unless SDK cancellation fails and disposal is required. A later request must be explicit.
 
@@ -28,7 +28,7 @@ Start and FollowUp stay pending until the turn finishes. The client must await c
 
 ### Server events
 
-All events use `investigationEvent` with `{ type, turnId, text?, toolName?, toolCallId? }`. A new turn ID identifies each accepted request.
+All events use `investigationEvent` with `{ type, turnId, text?, toolName?, toolCallId?, report? }`. A new turn ID identifies each accepted request.
 
 - `started`: SDK session is ready and the turn is about to be submitted.
 - `toolStarted` / `toolCompleted`: actual SDK tool lifecycle events; tool call identity is preserved.
@@ -43,7 +43,7 @@ T03-03 adds run eligibility, baseline validation, evidence validation and report
 
 ## Compact validated reports (T03-03)
 
-`answerReady` replaces the earlier conversational `answer` event. It carries `report: { report, durationMs, toolCallCount, inspectedSources }` on InvestigationEvent. The nested report has runId, optional baselineId, outcome (`supported`/`unknown`), causeCategory, summary, confidence (`low`/`medium`/`high`), confidenceReason, evidence, hypotheses, limitations and nextStep. FollowUp returns a full updated compact report of the same shape. No report is saved by this event.
+`answerReady` replaces the earlier conversational `answer` event. It carries `report: { report, durationMs, toolCallCount, inspectedSources }` on InvestigationEvent. The nested report has runId, optional baselineId, outcome (`supported`/`unknown`), causeCategory, summary, confidence (`low`/`medium`/`high`), confidenceReason, evidence, hypotheses, limitations and nextStep. FollowUp returns a full updated compact report of the same shape. durationMs and toolCallCount describe the current turn; inspectedSources lists tool names observed across the current investigation, including prior turns. No report is saved by this event.
 
 Generated explanation prose is limited to 250 words, with a target of 120-200 words, 1-6 evidence items and 1-3 short hypotheses. Each hypothesis has explanation and zero-based supportingEvidence/opposingEvidence indexes into the report evidence array. The app may append short factual baseline-comparison limitations. Evidence quotations are separate from prose and are bounded to 1500 characters each; source text is never rewritten to make it fit.
 

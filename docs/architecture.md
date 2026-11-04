@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Application shells and Aspire orchestration are implemented and accepted. Initial domain data is implemented and accepted; agent behavior remains planned.
+Status: Foundation, domain data/MCP, SDK sessions and compact report generation are implemented and accepted through T03-03. T03-04/G3 is Ready for review; see stage-3-review.md. UI and report persistence remain planned.
 
 ## Planned components
 

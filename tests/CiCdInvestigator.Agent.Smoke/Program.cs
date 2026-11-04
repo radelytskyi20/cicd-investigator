@@ -5,7 +5,8 @@ using CiCdInvestigator.Api;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
-if (args.Length != 2) throw new ArgumentException("Supply MCP endpoint and installed CLI path.");
+if (args.Length is < 2 or > 3 || (args.Length == 3 && args[2] != "--follow-up-only")) throw new ArgumentException("Supply MCP endpoint, installed CLI path and optional --follow-up-only.");
+bool followUpOnly = args.Length == 3;
 string? fixtureConnection = Environment.GetEnvironmentVariable("INVESTIGATOR_REPORT_TEST_SQL");
 if (fixtureConnection is not null) await CiCdInvestigator.Agent.Smoke.InsufficientDataFixture.SeedAsync(fixtureConnection);
 await using var app = ApiApplication.Build([
@@ -48,6 +49,7 @@ async Task<List<InvestigationEvent>> FinishAsync(Task invocation)
 async Task<List<InvestigationEvent>> ReportWithExplicitRetryAsync(Task invocation)
 {
     var result = await FinishAsync(invocation);
+    Console.WriteLine($"Report request observed {result.Count(item => item.Type == "toolStarted")} tool starts.");
     var failure = result.FirstOrDefault(item => item.Type == "error" && item.Text!.StartsWith("Report validation failed:", StringComparison.Ordinal));
     if (failure is null) return result;
     Check(result.All(item => item.Type != "answerReady"), "Invalid report emits no ready result.");
@@ -94,6 +96,26 @@ Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(initialReport));
 Check(initialReport.Report.Outcome == "supported" && initialReport.Report.Evidence.Any(item => item.Tool == "get_changes") && initialReport.ToolCallCount > 0, "S01 produces a validated report with change evidence.");
 var followUp = await ReportWithExplicitRetryAsync(connection.InvokeAsync("FollowUp", "Could the cache warning explain the test failure? Update the compact report using earlier evidence where sufficient."));
 Check(followUp.Any(item => item.Type == "answerReady"), "Follow-up returns an updated validated report.");
+var followUpReport = followUp.Single(item => item.Type == "answerReady").Report!;
+Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(followUpReport));
+string explanation = string.Join(" ", new[] { followUpReport.Report.Summary, followUpReport.Report.Limitations }
+    .Concat(followUpReport.Report.Hypotheses.Select(hypothesis => hypothesis.Explanation)));
+Check(explanation.Contains("cache", StringComparison.OrdinalIgnoreCase)
+    && explanation.Contains("round", StringComparison.OrdinalIgnoreCase), "Follow-up explicitly addresses cache and rounding explanations.");
+Check(followUpReport.Report.Evidence.Any(evidence => evidence.Quote.Contains("cache", StringComparison.OrdinalIgnoreCase))
+    && followUpReport.Report.Evidence.Any(evidence => evidence.Tool == "get_changes")
+    && followUpReport.Report.Evidence.Any(evidence => evidence.Tool is "get_test_results" or "read_job_log" && evidence.Quote.Contains("1.00", StringComparison.Ordinal)),
+    "Follow-up includes validated warning, change and failure evidence.");
+int reusedEvidence = followUpReport.Report.Evidence.Intersect(initialReport.Report.Evidence).Count();
+Console.WriteLine($"Follow-up: {reusedEvidence} exact citations reused; {followUpReport.ToolCallCount} calls in final turn; duration {followUpReport.DurationMs} ms.");
+Console.WriteLine("Semantic review still required: check whether the explanation weakens the cache hypothesis and labels uninspected versus unavailable sources accurately.");
+if (followUpOnly)
+{
+    await connection.StopAsync();
+    await app.StopAsync();
+    Console.WriteLine("PASS: focused S01 follow-up check completed; unrelated lifecycle scenarios were not rerun.");
+    return;
+}
 var fresh = await FinishAsync(connection.InvokeAsync("Start", new InvestigationRequest("run-101", "Explain this run.")));
 Check(fresh.All(item => item.Type != "answerReady") && fresh.Any(item => item.Type == "error"), "Successful target is not accepted as a failed investigation.");
 if (fixtureConnection is not null)

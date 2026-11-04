@@ -24,7 +24,7 @@ Example assignment: Implement T01-00 from this package. Prepare the repository i
 - Done: accepted by the owner.
 - Blocked: progress requires resolution of a recorded blocker.
 
-G1 is accepted by the owner; G2 is accepted (Done); G3-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
+G1 is accepted by the owner; G2 is accepted (Done); G3 is Ready for review; G4-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
 
 
 ## Stage 1 Repository preparation environment and Aspire startup
@@ -52,7 +52,7 @@ G3: real SDK uses MCP tools, runs the agent loop, demonstrates session memory an
 - [T03-01 Validate Copilot SDK with the MCP server](T03-01.md) | Done | Depends on: [T02-04](T02-04.md)
 - [T03-02 Implement connection-scoped agent sessions](T03-02.md) | Done | Depends on: [T03-01](T03-01.md)
 - [T03-03 Implement investigation behavior and report validation](T03-03.md) | Done | Depends on: [T03-02](T03-02.md)
-- [T03-04 Verify agent loop memory and cancellation](T03-04.md) | Planned | Depends on: [T03-03](T03-03.md)
+- [T03-04 Verify agent loop memory and cancellation](T03-04.md) | Ready for review | Depends on: [T03-03](T03-03.md)
 
 ## Stage 4 API and minimal user interface
 
@@ -118,7 +118,7 @@ The owner approved this final Stage 2 verification slice. Its implementation and
 
 ## Approved T03-01 subtasks (November 4, 2026)
 
-The owner approved both slices and execution with the existing local Copilot login. T03-02 was subsequently approved and accepted; T03-03 was subsequently approved; T03-04 and later tasks remain unapproved.
+The owner approved both slices and execution with the existing local Copilot login. T03-02 was subsequently approved and accepted; T03-03 was subsequently approved; T03-04 was subsequently approved; Stage 4 and later remain unapproved.
 
 - [T03-01-01 Connect Copilot SDK to MCP using the existing local login](T03-01-01.md) | Done | Blocked by: T02-04 (Done)
 - [T03-01-02 Verify cancellation and fresh-session behavior](T03-01-02.md) | Done | Blocked by: T03-01-01
@@ -132,7 +132,16 @@ Single-client, sequential prototype scope; both slices approved for execution. T
 
 ## Approved T03-03 subtasks (November 4, 2026)
 
-Both compact-report slices are approved for execution. T03-04 remains unapproved.
+Both compact-report slices are approved for execution. T03-04 was subsequently approved; Stage 4 remains unapproved.
 
 - [T03-03-01 Produce an evidence-validated investigation report for S01](T03-03-01.md) | Done | Blocked by: T03-02 (Done)
 - [T03-03-02 Handle insufficient evidence and invalid reports](T03-03-02.md) | Done | Blocked by: T03-03-01
+
+## Approved T03-04 subtasks (November 4, 2026)
+
+Reuse accepted Stage 3 evidence; implement only the focused follow-up check and G3 review record.
+
+- [T03-04-01 Verify a meaningful follow-up using existing investigation context](T03-04-01.md) | Ready for review | Blocked by: T03-03 (Done)
+- [T03-04-02 Consolidate verification evidence and submit Stage 3 for acceptance](T03-04-02.md) | Ready for review | Blocked by: T03-04-01
+
+G3 evidence and remaining boundaries: [Stage 3 review](../stage-3-review.md). Owner acceptance is pending.
