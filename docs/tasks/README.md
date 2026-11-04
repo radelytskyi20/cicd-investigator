@@ -49,7 +49,7 @@ G2: MCP protocol tests pass independently of the model against SQL Server.
 
 G3: real SDK uses MCP tools, runs the agent loop, demonstrates session memory and cancels correctly.
 
-- [T03-01 Validate Copilot SDK with the MCP server](T03-01.md) | Planned | Depends on: [T02-04](T02-04.md)
+- [T03-01 Validate Copilot SDK with the MCP server](T03-01.md) | In progress | Depends on: [T02-04](T02-04.md)
 - [T03-02 Implement connection-scoped agent sessions](T03-02.md) | Planned | Depends on: [T03-01](T03-01.md)
 - [T03-03 Implement investigation behavior and report validation](T03-03.md) | Planned | Depends on: [T03-02](T03-02.md)
 - [T03-04 Verify agent loop memory and cancellation](T03-04.md) | Planned | Depends on: [T03-03](T03-03.md)
@@ -115,3 +115,10 @@ The owner accepted T02-03 and both subtasks on November 4, 2026. T02-04/G2 was s
 - [T02-04-01 Complete MCP verification and submit Stage 2 for review](T02-04-01.md) | Done | Blocked by: T02-03 (Done)
 
 The owner approved this final Stage 2 verification slice. Its implementation and G2 were accepted on November 4, 2026; Stage 3 is not authorized by this approval.
+
+## Approved T03-01 subtasks (November 4, 2026)
+
+The owner approved both slices and execution with the existing local Copilot login. T03-02 and later tasks remain unapproved.
+
+- [T03-01-01 Connect Copilot SDK to MCP using the existing local login](T03-01-01.md) | Ready for review | Blocked by: T02-04 (Done)
+- [T03-01-02 Verify cancellation and fresh-session behavior](T03-01-02.md) | Planned | Blocked by: T03-01-01

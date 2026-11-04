@@ -43,3 +43,7 @@ ReadLogAsync defaults to 100 lines and accepts 1-200. It returns actual first/la
 ## Implemented MCP transport (T02-03)
 
 The existing host exposes /mcp using official SDK 2.3.1, with stateless Streamable HTTP and six explicitly registered read-only tools. Each invocation creates a scope for InvestigationQueries and its DbContext. Aspire passes the complete /mcp URL to API. Results are camelCase JSON text with string enums and separate query/source statuses. See mcp-tools.md for the verified catalog. The small console smoke uses the official client and the running SQL-backed host; dedicated T02-04 verification and agent integration remain planned.
+
+## Implemented SDK experiment (T03-01-01)
+
+The API executable has an explicit --copilot-smoke mode, invoked by scripts/Test-Copilot.ps1 against the existing Aspire MCP host. Ordinary API startup remains unchanged. GitHub.Copilot.SDK 1.0.28 uses the installed CLI 1.0.105 and existing login. A fresh session exposes only get_run, records tool events/source payload availability, and verifies a final answer and idle event. No agent service, hub or report persistence is implemented. Runtime files use ordinary CLI behavior; custom storage cleanup is out of scope.

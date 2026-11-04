@@ -75,3 +75,7 @@ Verify catalog identity/filtering, explicit run selection, baseline limits, real
 Use deterministic tests for query/lifecycle/validation mechanics and a protocol client for MCP. A fake SDK cannot replace real integration. Evaluate the primary and one negative case three times each with fresh sessions; follow-up memory is checked inside each session. Fabricated evidence and unauthorized actions are defects. Record actual results, versions, duration, tool calls and limits in English without complete runtime dumps.
 
 Explain on screen: AppHost startup, MCP catalog and a real source, domain instructions, tool-use events, repeated turns, follow-up memory, uncertainty and cancellation. CLI performs the agent loop; our code defines the domain, available tools, validation and lifecycle.
+
+### Local prototype clarification (November 4, 2026)
+
+CLI-managed runtime files are acceptable. No custom isolation or transcript cleanup is required. This does not authorize restoring previous conversations or adding application chat storage. Existing local Copilot authentication is reused without application-managed credentials.

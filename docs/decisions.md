@@ -57,3 +57,7 @@ On November 4, 2026 the owner accepted T02-02 and all four subtasks and authoriz
 ## T02-04 execution approval
 
 On November 4, 2026 the owner approved T02-04-01. Reuse the existing real MCP client and host; add one focused xUnit integration test on a dedicated database for truncated logs and distinct attempts. This approval does not start Stage 3. G2 is submitted for owner review after successful checks.
+
+## T03-01 local prototype scope (November 4, 2026)
+
+The owner approved T03-01-01 and T03-01-02 and their execution. Reuse the installed CLI and existing local login; create fresh SDK conversations without implementing credential management. CLI-managed session files are acceptable and are not a blocker. This supersedes the earlier requirement to disable, isolate or clean runtime storage. Do not change global settings or remove unrelated sessions. No custom storage isolation or transcript cleanup is required. Application conversation context remains active-session-only, with no automatic resume or cross-session memory; cancellation and ordinary SDK disposal still require verification. T03-02 and later tasks remain separately gated.
