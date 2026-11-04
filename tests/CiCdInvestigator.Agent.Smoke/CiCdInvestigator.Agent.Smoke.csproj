@@ -3,5 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="../../src/CiCdInvestigator.Api/CiCdInvestigator.Api.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
+    <ProjectReference Include="../../src/CiCdInvestigator.Data/CiCdInvestigator.Data.csproj" />
   </ItemGroup>
 </Project>

@@ -57,3 +57,9 @@ The API's explicit --copilot-lifecycle-smoke mode verifies same-session recall, 
 ApiApplication builds the same API used by normal startup and the real SignalR integration smoke. InvestigationHub forwards Start/FollowUp/Stop to one InvestigationAgentService singleton. The service holds one SDK conversation and serializes turns with a single gate; no per-client dictionary, provider layer or second model loop exists. A new Start after completion creates fresh context; FollowUp retains the current SDK context. Six existing read-only MCP tools are explicitly allowed. A turn-local channel forwards actual SDK events to SignalR and is drained or cancelled within the awaited request; it is not a background investigation queue.
 
 Stop cancels the current turn while retaining the conversation. Disconnect and application shutdown cancel and dispose it. The one-client scope supersedes the earlier planned per-tab session wording. UI, validated reports and saved history remain later tasks.
+
+## Implemented report generation and validation (T03-03)
+
+InvestigatorInstructions supplies domain and compact-output guidance through the SDK system-message configuration. The existing SDK/CLI chooses and executes tool calls; no extra model loop or provider layer was introduced. Native ToolExecutionCompleteEvent result content exposes the MCP JSON, so no tool-to-MCP bridge is needed.
+
+InvestigationEvidence normalizes observed scalar source values with dataset/run/job/attempt identities and locators for validation. This is transient application state used only to check the current investigation, not persistent memory or a source archive. ReportValidator checks the generated report, then emits answerReady with duration and tool count. Validation failures retain the conversation for an explicit retry. One small insufficient-data fixture exists only in investigator-report-test; the ordinary mock dataset remains S01.

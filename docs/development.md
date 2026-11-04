@@ -179,3 +179,19 @@ Verified on November 4, 2026:
 During development, the first smoke treated the expected shutdown WebSocket exception as a failure. Another run attempted reconnect before CLI disposal finished; its checker waited for an event from a rejected invocation. The checker now handles expected transport closure and bounds its wait for cleanup; the final full smoke passed. A build attempted while that earlier checker held its executable open failed with a Windows file-lock error; after stopping that owned checker, the build passed.
 
 Limitations: no browser/UI, hard-crash cleanup, network partition timing, general report validation or G3 acceptance is claimed. These are local real-integration checks, not the repeated scenario evaluation in T05-02. The cancellation fallback was not forced. SDK files remain CLI-managed as approved.
+
+## T03-03 compact report checks
+
+Commands verified on November 4, 2026:
+
+- `dotnet build CiCdInvestigator.slnx -c Release --verbosity minimal` — passed, zero warnings/errors.
+- `dotnet test tests/CiCdInvestigator.Api.Tests -c Release --no-restore --verbosity minimal` — 18 passed. Checks cover malformed JSON, evidence quotation/tool/run/job/attempt/version/locator/completeness mismatches, evidence reuse versus new-investigation isolation, unsupported target/baseline, hypothesis indexes, original log-line resolution, baseline limitations, unknown cause and excessive report length.
+- `./scripts/Test-Reports.ps1` — final real SignalR/SDK/MCP smoke passed against the isolated investigator-report-test database. Requires the existing Aspire SQL container and a Release build. It reuses the local SQL secret without printing it, starts an owned MCP host, and retains the synthetic database. Only that database receives the minimal insufficient-data fixture. The ordinary S01 demonstration database is unchanged.
+
+The final S01 report used six tool calls in about 22.3 seconds, cited the failed test and rounding patch, and considered the cache warning. The negative report used four calls in about 17.0 seconds, returned unknown cause, and cited truncated/unavailable sources. These are individual integration observations, not the repeated Stage 5 evaluation. Native SDK tool-result Content supplied parsable source JSON; no bridge or alternate SQL path for the investigator was required.
+
+Follow-up produced an updated validated report. A successful target was rejected. Following the cancellation exercise, the model initially returned a report for the wrong target; validation emitted an error without answerReady. The smoke client submitted one explicit corrective follow-up, and the corrected report passed. The smoke may perform at most one such user-style corrective request per report; the application itself never retries automatically. Earlier development runs also rejected inaccurate citations, demonstrating that model output is not assumed valid. A validation failure is a visible result, not silently repaired or saved.
+
+Stop, explicit continuation, graceful disconnect, abrupt WebSocket loss and shutdown passed with the report contract. Final cancellation-processing observations were 22/37/11/15 ms respectively; disconnect/reconnect took 1525 ms including the deliberate 1500 ms wait. No child runtime remained after smoke PID 18400 exited. CLI-managed files were left untouched. Restricted builds could not read the user's NuGet settings; the final build with normal host access passed.
+
+The real smoke prints only completed synthetic reports, not credentials or full SDK session dumps. API errors retain the conversation for explicit correction, while a new Start/disposal clears its evidence. UI rendering, Save/history, broad semantic evaluation, crash cleanup and G3 acceptance remain unverified or later scope. Source membership validation does not prove every sentence or hypothesis is correct; in particular, distinguishing uninspected sources from unavailable ones remains part of scenario review.

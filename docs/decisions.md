@@ -73,3 +73,7 @@ The owner approved T03-02-01 and T03-02-02 for implementation. This local protot
 ## T03-02 owner acceptance (November 4, 2026)
 
 The owner accepted T03-02-01 and T03-02-02, completing parent T03-02 (Done). T03-03 and T03-04 remain Planned and require separate scope approval. G3 is not yet accepted.
+
+## Approved compact-report scope (November 4, 2026)
+
+The owner approved T03-03-01 and T03-03-02. Reports must remain a few short paragraphs, comparable to the reviewed example: conclusion, facts/evidence, a relevant alternative, confidence with reason, limits and a useful next check. Every follow-up returns an updated complete compact report. Use a minimal insufficient-data fixture only in a test database; do not expand the production S01 dataset or implement the full Stage 5 catalog. Keep one client, one active investigation, the existing login and SDK-owned agent loop. T03-04 remains separately gated.

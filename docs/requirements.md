@@ -83,3 +83,7 @@ CLI-managed runtime files are acceptable. No custom isolation or transcript clea
 ### Single-client execution scope (November 4, 2026)
 
 The approved local prototype supports one client and one current investigation application-wide. No simultaneous tabs or parallel investigations are required. When a response completes or Stop finishes, the user may explicitly send a follow-up or start a fresh investigation. A new investigation replaces the current SDK context; no separate close-investigation action is required. Disconnect and shutdown still cancel work and release that context. This supersedes earlier wording implying multiple isolated tab sessions, without adding resume or persistent application memory.
+
+### Compact report presentation (November 4, 2026)
+
+The owner approved a few short paragraphs comparable to the reviewed example, not a long investigation narrative. Include a conclusion, supporting facts, relevant alternative, qualitative confidence/reason, limitations and next action with verification. Follow-ups replace the compact report with an updated complete report rather than append increasingly long sections. Actual tool activity remains separate progress. Evidence provenance validation does not constitute automatic proof of causality.

@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Text.Json;
 using System.Threading.Channels;
 using GitHub.Copilot;
 using Microsoft.AspNetCore.SignalR;
@@ -15,6 +18,8 @@ public sealed class InvestigationAgentService(
     private CancellationTokenSource? _activeTurn;
     private CopilotClient? _client;
     private CopilotSession? _session;
+    private InvestigationEvidence _evidence = new();
+    private InvestigationRequest? _target;
 
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     public async Task StopAsync(CancellationToken cancellationToken) => await CloseAsync();
@@ -35,6 +40,9 @@ public sealed class InvestigationAgentService(
         Task delivery = DeliverAsync(events.Reader, connectionId, cancellation.Token);
         IDisposable? subscription = null;
         string outcome = "completed";
+        var stopwatch = Stopwatch.StartNew();
+        int toolCalls = 0;
+        var callTools = new ConcurrentDictionary<string, string>();
         var idle = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         try
         {
@@ -42,6 +50,8 @@ public sealed class InvestigationAgentService(
             if (request is not null)
             {
                 await DisposeSessionAsync();
+                _evidence = new InvestigationEvidence();
+                _target = request;
                 string endpoint = configuration["Mcp:Endpoint"] ?? throw new InvalidOperationException("Mcp:Endpoint is required.");
                 _client = new CopilotClient(new CopilotClientOptions
                 {
@@ -53,6 +63,7 @@ public sealed class InvestigationAgentService(
                 _session = await _client.CreateSessionAsync(new SessionConfig
                 {
                     Model = configuration["Copilot:Model"] ?? "gpt-5.4",
+                    SystemMessage = new SystemMessageConfig { Mode = SystemMessageMode.Append, Content = InvestigatorInstructions.Text },
                     EnableConfigDiscovery = false,
                     EnableSkills = false,
                     EnableSessionStore = false,
@@ -70,6 +81,20 @@ public sealed class InvestigationAgentService(
             {
                 if (sessionEvent is SessionIdleEvent) idle.TrySetResult();
                 if (cancellation.IsCancellationRequested) return;
+                if (sessionEvent is ToolExecutionStartEvent toolStart)
+                {
+                    Interlocked.Increment(ref toolCalls);
+                    callTools[toolStart.Data.ToolCallId] = toolStart.Data.ToolName.Replace("cicd-", "", StringComparison.Ordinal);
+                }
+                if (sessionEvent is ToolExecutionCompleteEvent toolEnd && toolEnd.Data.Success
+                    && callTools.TryGetValue(toolEnd.Data.ToolCallId, out string? tool) && toolEnd.Data.Result?.Content is string source)
+                {
+                    try { _evidence.Record(tool, source); }
+                    catch (Exception exception) when (exception is JsonException or InvalidOperationException or KeyNotFoundException)
+                    {
+                        logger.LogWarning("MCP evidence payload could not be captured for {Tool}: {ErrorType}", tool, exception.GetType().Name);
+                    }
+                }
                 InvestigationEvent? notification = sessionEvent switch
                 {
                     ToolExecutionStartEvent started => new("toolStarted", turnId, ToolName: started.Data.ToolName, ToolCallId: started.Data.ToolCallId),
@@ -84,7 +109,9 @@ public sealed class InvestigationAgentService(
             var answer = await _session.SendAndWaitAsync(new MessageOptions { Prompt = prompt }, Timeout.InfiniteTimeSpan, cancellation.Token);
             cancellation.Token.ThrowIfCancellationRequested();
             if (string.IsNullOrWhiteSpace(answer?.Data.Content)) throw new InvalidOperationException("SDK returned no answer.");
-            events.Writer.TryWrite(new("answer", turnId, answer.Data.Content));
+            var report = ReportValidator.Validate(answer.Data.Content, _evidence, _target!);
+            cancellation.Token.ThrowIfCancellationRequested();
+            events.Writer.TryWrite(new("answerReady", turnId, Report: new(report, stopwatch.ElapsedMilliseconds, toolCalls, _evidence.Scope())));
         }
         catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
         {
@@ -108,6 +135,11 @@ public sealed class InvestigationAgentService(
                 await DisposeSessionAsync();
             }
             logger.LogInformation("SDK cancellation processed in {ElapsedMs} ms.", cancellationTimer.ElapsedMilliseconds);
+        }
+        catch (ReportValidationException exception)
+        {
+            outcome = "error";
+            events.Writer.TryWrite(new("error", turnId, "Report validation failed: " + exception.Message + " You may explicitly retry in this conversation."));
         }
         catch (Exception exception)
         {
@@ -162,6 +194,8 @@ public sealed class InvestigationAgentService(
         finally
         {
             _session = null;
+            _target = null;
+            _evidence = new InvestigationEvidence();
             if (_client is not null) await _client.DisposeAsync();
             _client = null;
         }

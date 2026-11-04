@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
 if (args.Length != 2) throw new ArgumentException("Supply MCP endpoint and installed CLI path.");
+string? fixtureConnection = Environment.GetEnvironmentVariable("INVESTIGATOR_REPORT_TEST_SQL");
+if (fixtureConnection is not null) await CiCdInvestigator.Agent.Smoke.InsufficientDataFixture.SeedAsync(fixtureConnection);
 await using var app = ApiApplication.Build([
     "--urls", "http://127.0.0.1:0", "--Mcp:Endpoint", args[0], "--Copilot:CliPath", args[1],
     "--Logging:LogLevel:Default", "Warning", "--Logging:LogLevel:CiCdInvestigator.Api.InvestigationAgentService", "Information"
@@ -26,7 +28,7 @@ await using var connection = new HubConnectionBuilder().WithUrl(endpoint, option
     };
 }).Build();
 var events = Channel.CreateUnbounded<InvestigationEvent>();
-using var subscription = connection.On<InvestigationEvent>("investigationEvent", notification => events.Writer.TryWrite(notification));
+using var subscription = connection.On<InvestigationEvent>("investigationEvent", notification => { if (notification.Type == "error") Console.WriteLine(notification.Text); events.Writer.TryWrite(notification); });
 await connection.StartAsync();
 
 async Task<List<InvestigationEvent>> FinishAsync(Task invocation)
@@ -41,6 +43,16 @@ async Task<List<InvestigationEvent>> FinishAsync(Task invocation)
     }
 
     return received;
+}
+
+async Task<List<InvestigationEvent>> ReportWithExplicitRetryAsync(Task invocation)
+{
+    var result = await FinishAsync(invocation);
+    var failure = result.FirstOrDefault(item => item.Type == "error" && item.Text!.StartsWith("Report validation failed:", StringComparison.Ordinal));
+    if (failure is null) return result;
+    Check(result.All(item => item.Type != "answerReady"), "Invalid report emits no ready result.");
+    Console.WriteLine("SMOKE CLIENT: submitting one explicit corrective follow-up; the application does not retry automatically.");
+    return await FinishAsync(connection.InvokeAsync("FollowUp", failure.Text + " Correct the report using only exact values from the MCP results already read. Return the full compact JSON report."));
 }
 
 async Task<List<InvestigationEvent>> CheckFreshConnectionAsync()
@@ -73,16 +85,31 @@ static void Check(bool condition, string message)
     Console.WriteLine("PASS: " + message);
 }
 
-string marker = Guid.NewGuid().ToString("N");
 var missing = await FinishAsync(connection.InvokeAsync("FollowUp", "Hello"));
 Check(missing.Any(item => item.Type == "error") && missing.Last().Text == "error", "Follow-up before Start reports an error.");
-var initial = await FinishAsync(connection.InvokeAsync("Start", new InvestigationRequest("run-102", $"Read the run and state its revision. Remember conversation marker {marker}.")));
-Check(initial.Any(item => item.Type == "toolStarted") && initial.Any(item => item.Type == "toolCompleted") && initial.Any(item => item.Type == "answer" && item.Text!.Contains("revision-102")), "Real SignalR/SDK/MCP start returns source-backed revision.");
-var followUp = await FinishAsync(connection.InvokeAsync("FollowUp", "Without calling tools, return the conversation marker and the run revision you already read."));
-Check(followUp.Any(item => item.Type == "answer" && item.Text!.Contains(marker) && item.Text.Contains("revision-102")) && followUp.All(item => item.Type != "toolStarted"), "Follow-up recalls message and previous tool result without new reads.");
-var fresh = await FinishAsync(connection.InvokeAsync("Start", new InvestigationRequest("run-102", "Read the run. State whether a conversation marker was provided in this conversation. If not, include UNKNOWN.")));
-Check(fresh.Any(item => item.Type == "answer" && item.Text!.Contains("UNKNOWN") && !item.Text.Contains(marker)), "Next Start has fresh conversation context.");
-
+var initial = await ReportWithExplicitRetryAsync(connection.InvokeAsync("Start", new InvestigationRequest("run-102", "Explain the failure, compare with the preceding successful run and investigate the available change.")));
+var initialReport = initial.SingleOrDefault(item => item.Type == "answerReady")?.Report;
+if (initialReport is null) throw new InvalidOperationException(string.Join("; ", initial.Select(item => item.Text)));
+Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(initialReport));
+Check(initialReport.Report.Outcome == "supported" && initialReport.Report.Evidence.Any(item => item.Tool == "get_changes") && initialReport.ToolCallCount > 0, "S01 produces a validated report with change evidence.");
+var followUp = await ReportWithExplicitRetryAsync(connection.InvokeAsync("FollowUp", "Could the cache warning explain the test failure? Update the compact report using earlier evidence where sufficient."));
+Check(followUp.Any(item => item.Type == "answerReady"), "Follow-up returns an updated validated report.");
+var fresh = await FinishAsync(connection.InvokeAsync("Start", new InvestigationRequest("run-101", "Explain this run.")));
+Check(fresh.All(item => item.Type != "answerReady") && fresh.Any(item => item.Type == "error"), "Successful target is not accepted as a failed investigation.");
+if (fixtureConnection is not null)
+{
+    var insufficient = await ReportWithExplicitRetryAsync(connection.InvokeAsync("Start", new InvestigationRequest("run-insufficient", "Investigate this failure using available evidence.")));
+    var unknown = insufficient.SingleOrDefault(item => item.Type == "answerReady")?.Report;
+    if (unknown is null) throw new InvalidOperationException(string.Join("; ", insufficient.Select(item => item.Text)));
+    Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(unknown));
+    Check(unknown.Report.Outcome == "unknown" && unknown.Report.BaselineId is null
+        && unknown.Report.Evidence.Any(item => item.Completeness is "Truncated" or "Unavailable"), "Insufficient data produces a validated unknown-cause report.");
+}
+if (fixtureConnection is null)
+{
+var restarted = await ReportWithExplicitRetryAsync(connection.InvokeAsync("Start", new InvestigationRequest("run-102", "Investigate the failure.")));
+Check(restarted.Any(item => item.Type == "answerReady"), "Fresh investigation collects its own valid evidence.");
+}
 const string longPrompt = "Call cicd-get_run for run-102 then run-101. Repeat these reads 30 times sequentially before answering.";
 Task running = connection.InvokeAsync("FollowUp", longPrompt);
 await WaitForToolAsync();
@@ -94,12 +121,12 @@ try
 catch (HubException) { Console.WriteLine("PASS: overlapping request rejected without a queue."); }
 await connection.InvokeAsync("Stop").WaitAsync(TimeSpan.FromSeconds(30));
 var cancelled = await FinishAsync(running);
-Check(cancelled.Last().Text == "cancelled" && cancelled.All(item => item.Type != "answer"), "Stop reports cancellation without a final answer.");
+Check(cancelled.Last().Text == "cancelled" && cancelled.All(item => item.Type != "answerReady"), "Stop reports cancellation without a final answer.");
 await Task.Delay(1000);
 Check(!events.Reader.TryRead(out _), "No events after completed Stop observation.");
 await connection.InvokeAsync("Stop");
-var continued = await FinishAsync(connection.InvokeAsync("FollowUp", "Without tools, state the run revision you read earlier."));
-Check(continued.Any(item => item.Type == "answer" && item.Text!.Contains("revision-102")), "Explicit follow-up after Stop continues the conversation.");
+var continued = await ReportWithExplicitRetryAsync(connection.InvokeAsync("FollowUp", "Update the compact report using the evidence already read."));
+Check(continued.Any(item => item.Type == "answerReady"), "Explicit follow-up after Stop continues the conversation.");
 
 Task disconnectTurn = connection.InvokeAsync("FollowUp", longPrompt);
 await WaitForToolAsync();
