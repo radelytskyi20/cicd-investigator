@@ -24,7 +24,7 @@ Example assignment: Implement T01-00 from this package. Prepare the repository i
 - Done: accepted by the owner.
 - Blocked: progress requires resolution of a recorded blocker.
 
-G1 is accepted by the owner; G2 is accepted (Done); G3 is accepted (Done); G4-G5 are Planned. Dependencies form the listed sequence. Later-stage implementation requires a reviewed small-task breakdown and explicit owner approval.
+G1 is accepted by the owner; G2 is accepted (Done); G3 is accepted (Done). Reduced Stage 4 is implemented and Ready for review; G5 remains Planned. The November 4 demo scope in decisions.md supersedes the broader original Stage 4 acceptance scope. Owner acceptance remains separate.
 
 
 ## Stage 1 Repository preparation environment and Aspire startup
@@ -58,10 +58,19 @@ G3: real SDK uses MCP tools, runs the agent loop, demonstrates session memory an
 
 G4: the full UI path works; tab closure stops analysis and only completed reports are saved.
 
-- [T04-01 Expose read APIs and persist completed reports](T04-01.md) | Planned | Depends on: [T03-04](T03-04.md)
-- [T04-02 Build the run catalog and details UI](T04-02.md) | Planned | Depends on: [T04-01](T04-01.md)
-- [T04-03 Build investigation chat and report history](T04-03.md) | Planned | Depends on: [T04-02](T04-02.md)
-- [T04-04 Verify the integrated UI API and agent](T04-04.md) | Planned | Depends on: [T04-03](T04-03.md)
+- [T04-01 Expose read APIs and persist completed reports](T04-01.md) | Ready for review | Depends on: [T03-04](T03-04.md)
+- [T04-02 Build the run catalog and details UI](T04-02.md) | Ready for review | Depends on: [T04-01](T04-01.md)
+- [T04-03 Build investigation chat and report history](T04-03.md) | Ready for review | Depends on: [T04-02](T04-02.md)
+- [T04-04 Verify the integrated UI API and agent](T04-04.md) | Ready for review | Depends on: [T04-03](T04-03.md)
+
+### Approved reduced T04-01 subtasks
+
+- [T04-01-01 Browse runs and baseline candidates through REST](T04-01-01.md) | Ready for review | Blocked by: T03-04 (Done)
+- [T04-01-02 Read investigation evidence through REST](T04-01-02.md) | Ready for review | Blocked by: T04-01-01
+- [T04-01-03 Save and reopen a validated completed report](T04-01-03.md) | Ready for review | Blocked by: T04-01-01
+- [T04-01-04 Verify the reduced report persistence path](T04-01-04.md) | Ready for review | Blocked by: T04-01-02, T04-01-03
+
+The owner approved the complete reduced Stage 4 delivery. Saved-report revisions and broader UI/verification scope are deferred; T04-01-04 verifies simple independent saved reports instead of implementing revisions.
 
 ## Stage 5 Mock data evaluation and finalization
 
@@ -118,7 +127,7 @@ The owner approved this final Stage 2 verification slice. Its implementation and
 
 ## Approved T03-01 subtasks (November 4, 2026)
 
-The owner approved both slices and execution with the existing local Copilot login. T03-02 was subsequently approved and accepted; T03-03 was subsequently approved; T03-04 was subsequently approved; Stage 4 and later remain unapproved.
+The owner approved both slices and execution with the existing local Copilot login. T03-02 was subsequently approved and accepted; T03-03 was subsequently approved; T03-04 was subsequently approved; Reduced Stage 4 was subsequently approved; Stage 5 remains unapproved.
 
 - [T03-01-01 Connect Copilot SDK to MCP using the existing local login](T03-01-01.md) | Done | Blocked by: T02-04 (Done)
 - [T03-01-02 Verify cancellation and fresh-session behavior](T03-01-02.md) | Done | Blocked by: T03-01-01
@@ -132,7 +141,7 @@ Single-client, sequential prototype scope; both slices approved for execution. T
 
 ## Approved T03-03 subtasks (November 4, 2026)
 
-Both compact-report slices are approved for execution. T03-04 was subsequently approved; Stage 4 remains unapproved.
+Both compact-report slices are approved for execution. T03-04 was subsequently approved; Reduced Stage 4 was subsequently approved; Stage 5 remains unapproved.
 
 - [T03-03-01 Produce an evidence-validated investigation report for S01](T03-03-01.md) | Done | Blocked by: T03-02 (Done)
 - [T03-03-02 Handle insufficient evidence and invalid reports](T03-03-02.md) | Done | Blocked by: T03-03-01
@@ -144,4 +153,4 @@ Reuse accepted Stage 3 evidence; implement only the focused follow-up check and 
 - [T03-04-01 Verify a meaningful follow-up using existing investigation context](T03-04-01.md) | Done | Blocked by: T03-03 (Done)
 - [T03-04-02 Consolidate verification evidence and submit Stage 3 for acceptance](T03-04-02.md) | Done | Blocked by: T03-04-01
 
-G3 evidence and remaining boundaries: [Stage 3 review](../stage-3-review.md). Both T03-04 subtasks are accepted by the owner on November 4, 2026, completing T03-04 and G3. No Stage 3 implementation tasks remain. Stage 4 requires separate approval.
+G3 evidence and remaining boundaries: [Stage 3 review](../stage-3-review.md). Both T03-04 subtasks are accepted by the owner on November 4, 2026, completing T03-04 and G3. No Stage 3 implementation tasks remain. The reduced Stage 4 was subsequently approved and is Ready for review; see stage-4-review.md.

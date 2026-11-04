@@ -1,5 +1,29 @@
 # Development
 
+## Current reduced Stage 4 demo (November 4, 2026)
+
+The owner-approved demo is implemented and Ready for review. Use the existing startup/stop scripts and local credentials below. Aspire applies the SavedReports migration through MCP startup; API never races migrations. No manual SQL changes are needed. Ports are dynamic: take the web resource HTTP URL from `aspire describe --apphost src/CiCdInvestigator.AppHost/CiCdInvestigator.AppHost.csproj --format Json` or the dashboard.
+
+Verified commands for this delivery:
+
+```powershell
+dotnet build CiCdInvestigator.slnx -c Release --verbosity minimal
+dotnet test tests/CiCdInvestigator.Api.Tests -c Release --no-build --verbosity minimal
+# From src/cicd-investigator-web, using the pinned Node executable:
+& "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe" "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js" run build
+# From repository root, with Aspire resources healthy:
+./scripts/Test-Mcp.ps1
+./scripts/Test-DemoApi.ps1
+# Optional: repeat Save for a current completed result while its browser session is open and idle:
+./scripts/Test-DemoApi.ps1 -ResultId '<current ready-result GUID>'
+```
+
+Actual results: Release solution build passed with zero warnings/errors; frontend TypeScript and production build passed; 18 validator tests passed; six-tool official MCP client passed; SQL-backed API read/save checks passed. The new JavaScript SignalR client is pinned to 10.0.11 (registry version verified before installation); existing framework/SDK pins were retained. npm install reported zero vulnerabilities.
+
+The real browser S01 investigation returned a validated report in 26.7 seconds / 8 tool calls. The contextual cache-warning follow-up returned in 8.3 seconds / 0 new calls. Both were explicitly saved, repeat Save was idempotent, and both reopened after full Stop-Local/Start-Local. Stop and active tab closure logged server abort processing of 41 ms and 26 ms; the API-owned Copilot process exited after closure. No chat was restored and no cancellation-created report appeared. See [Stage 4 review](stage-4-review.md) for precise verification boundaries.
+
+The standalone SDK/SignalR smoke commands below remain available; the new persistence path was verified through the browser and Test-DemoApi instead of adding another model loop or fake SDK. CLI runtime files remain acceptable. Independent saved reports, rather than grouped revisions, are the approved demo scope.
+
 ## Verified environment (November 4, 2026)
 
 T01-01 establishes the prerequisite baseline; applications do not exist yet.

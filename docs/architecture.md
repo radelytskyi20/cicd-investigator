@@ -1,10 +1,18 @@
 # Architecture
 
-Status: Foundation, domain data/MCP, SDK sessions and compact report generation are implemented and accepted through T03-04. T03-04/G3 is accepted (Done); see stage-3-review.md. UI and report persistence remain planned.
+Status: Foundation through T03-04/G3 is accepted (Done). The reduced Stage 4 UI and independent report persistence are implemented and ready for review; see stage-4-review.md. Earlier sections below are point-in-time planning and implementation records, superseded by later sections and decisions.md.
 
 ## Planned components
 
 Aspire AppHost will orchestrate SQL Server, the ASP.NET Core API, one separate MCP host and the React/Vite frontend. A Data library will be added when EF Core logic is actually shared. See [decisions](decisions.md) for proposals and ownership.
+
+## Implemented reduced Stage 4
+
+React renders one screen with run selection, source inspection, actual SignalR tool events, the compact report, follow-up, Stop and independent saved reports. The pinned @microsoft/signalr 10.0.11 client uses the existing hub without automatic reconnect. Vite proxies /api and /investigation, including WebSockets. No browser-side model calls, persistent chat or client mock fixtures were added.
+
+API references the existing Data library and exposes its concrete queries through minimal REST endpoints. Save accepts a server-generated ready-result ID; InvestigationAgentService serializes it with turns and session disposal using its existing gate. A scoped EF context writes one immutable SavedReport with the completed JSON and minimal metadata. SQL is unchanged by read-only MCP tools; MCP host startup remains the migration owner. No generic repository, extra model loop, revision engine or background queue was added.
+
+Saved report opening is a read-only history operation and does not recreate the conversation. Source links carry original identity and dataset version. An unavailable version is labelled, without storing full source archives. Filters, revisions, full chat transcript UI, manual baseline UI and broader Stage 5 scenarios remain deferred.
 
 ## Planned data flow
 
